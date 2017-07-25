@@ -90,20 +90,42 @@ def _dump():
             dump(t, f)
     allTeams = []
 
+def save_backup():
+    """Function that will save all the data in a text file as a backup.
+This text file will only be accessed by this function and the function 'load_backup()'"""
+    folder = getcwd()
+    filename = folder + r"\data\BackupDatabase.txt"
+    with open(filename, "wb") as f:
+        for t in allTeams:
+            dump(t, f)
+
+def load_backup():
+    """Will load the backup database that is stored in the text file.
+Will return a list of all the team objects stored in the text file."""
+    folder = getcwd()
+    filename = folder + r"\data\BackupDatabase.txt"
+    l = []
+    with open(filename, "rb") as f:
+        while True:
+            try:
+                t = load(f)
+            except EOFError:
+                break
+            else:
+                l.append(t)
+    return l
+
 def close():
     """This method should be called everytime the program stops using this module, especially if any data has been changed"""
     _dump()
+    save_backup()
     quit()
 
 if __name__ != "__main__":
     allTeams = _load()
 elif __name__ == "__main__":
     testobj = Team("Test Team", ["Player Name 1", "Player Name 2"])
-    print allTeams
-    _dump()
-    print allTeams
-    _load()
-    print allTeams
+    save_backup()
     
         
         

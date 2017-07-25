@@ -1,0 +1,27 @@
+ccopy_reg
+_reconstructor
+p0
+(c__main__
+Team
+p1
+c__builtin__
+object
+p2
+Ntp3
+Rp4
+(dp5
+S'name'
+p6
+S'Test Team'
+p7
+sS'ELO'
+p8
+I0
+sS'player_list'
+p9
+(lp10
+S'Player Name 1'
+p11
+aS'Player Name 2'
+p12
+asb.
