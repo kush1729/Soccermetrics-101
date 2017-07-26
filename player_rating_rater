@@ -1,0 +1,17 @@
+from random import *
+def rater(self, year_1_rating, year_2_rating, improvement):
+  rating_difference = year_2_rating - year_1_rating
+  if rating_difference > 0 and improvement > 0:
+    if improvement in range(7,11):
+      self.new_rating = year_2_rating + 1.0
+    elif improvement in range(4,8):
+      self.new_rating = year_2_rating + 0.5
+    elif improvement in range(5):
+      x  = random()
+      prob = randint(1,2)
+      if prob == 1:
+        self.new_rating = year_2_rating + x
+      else:
+        self.new_rating = year_2_rating - x
+      
+    
