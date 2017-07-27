@@ -1,7 +1,153 @@
+# Import stuff here:
 from os import getcwd
 from pickle import load, dump
+import pygame
+pygame.init()
+import time
+# ------------------------------------------
+# Control frames per second:----------------
+clock = pygame.time.Clock()
+# ----------------------------------------------------
+#COLOURS: (Refer to RGB dictionary)----------------------------------------------------------
+white = (255, 255, 255)
+black = (0, 0, 0)
+red = (255, 0, 0)
+green = (0, 255, 0)
+darkgreen = (34, 139, 34)
+yellow = (255, 255, 0)
+gold = (255, 215, 0)
+goldenrod = (218, 165, 32)
+blue = (0, 0, 255)
+lightblue = (0, 191, 255)
+darkblue = (0, 0, 220)
+lightgrey = (218, 218, 218)
+tomato = (255, 99, 71)
+sienna = (160, 82, 45)
+darkorange = (255, 140, 0)
+purple = (0, 255, 255)
+# --------------------------------------------------------------------------
+#IMPORTANT CONSTANTS FOR DESIGN OF GAME DISPLAY------------------------------------------
+display_width, display_height = 1000, 750
+gameDisplay = pygame.display.set_mode((display_width, display_height), pygame.FULLSCREEN)
+##gameDisplay.fill(white)
+##pygame.display.update()
+# --------------------------------------------------------------------------------------
+# Images:
 
+"BACKGROUND IMAGES:"
+pitchback = pygame.image.load("pitch.png")
+
+
+"OtherImages:"
+smallball1 = pygame.image.load("smallball1.png")
+smallball2 = pygame.image.load("smallball2.png")
+bigball1 = pygame.image.load("bigball1.png")
+bigball2 = pygame.image.load("bigball2.png")
+# ---------------------------------------------------------------------------
+# Any lists:
 allTeams = []
+# ----------------------------------------------------------------------------------------
+
+
+
+
+
+"""The functions that are for visual effect are defined here!!"""
+def background(images, xpos, ypos):         # All three are lists!
+    for i in range(len(images)):
+        gameDisplay.blit(images[i], [xpos[i], ypos[i]])
+        # No updating coz otherwise there'll be a slight lag between background and foreground
+
+
+# Main INTRO Function! (ACTUALLY CALLED BY ANOTHER FUNCTION CALLED "INTRO" xD)
+def introductory_function():
+    gameDisplay.fill(white)
+    pygame.display.update()
+    gameon = True
+    background([pitchback], [0], [0])
+    ballsize = smallball1.get_size()
+    while gameon:
+        # Variables:
+        ballx, bally = 5 + ballsize[0], display_height/2
+        balllist = [bigball1, bigball2]
+        for i in range(len(balllist)):
+            balllist[i] = pygame.transform.scale(balllist[i], (20,20))
+        bigballlist = [bigball1, bigball2]
+        backx, backy = 0,0
+        fps = 60
+        
+        # --------------------------------
+        
+        pygame.display.flip()
+        count = 0
+        
+        while ballx < display_width/2 - 140:            # Taking into account the size of the ball at the time
+            clock.tick(fps)
+            ballimg = balllist[count%2]
+            s = ballimg.get_size()
+            if s[0] > 120 or s[1] > 120:
+                balllist = bigballlist
+            
+            background([pitchback, ballimg], [backx, ballx], [backy, bally])
+            ballx += 25
+            
+            
+            
+            count += 1
+            
+            
+            
+                
+            if s[0] < 280 and s[1] < 270 and count % 3 == 0:
+                
+                if s[0] * 2 >= 280 or s[1] >= 280:
+                    pass
+##                    balllist = bigballlist
+##                    for i in range(len(balllist)):
+##                        
+##                        balllist[i] = pygame.transform.scale(balllist[i], (280, 280))
+                else:
+                    for i in range(len(balllist)):
+                        size = balllist[i].get_size()
+                        balllist[i] = pygame.transform.scale(balllist[i], [(9 *size[0])/5 , (9*size[1])/5])
+                        if bally <> display_height/2 - size[1]/2:
+                            bally = display_height/2 - size[1]/2
+            pygame.display.flip()
+            
+
+        else:
+            size = bigball1.get_size()
+            background([pitchback, bigball2], [backx, (display_width/2 - size[0]/2)], [backy, (display_height/2-size[1]/2)-5])
+            pygame.display.update()
+
+##        yield
+        time.sleep(0.5)
+        # More Variables:
+        radius = 10
+        while radius < 156:
+            pygame.draw.circle(gameDisplay, white, (display_width/2, display_height/2), radius)
+            radius += 20
+            time.sleep(0.1)
+            pygame.display.flip()
+        gameon = not gameon
+            
+
+        
+
+
+def intro():
+    introductory_function()
+    while True:
+
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE: 
+                    pygame.quit()
+                    quit()
+    
+
+# -------------------------------------------------------------------------------------------
+
 
 
 """Class Definition is incomplete.
@@ -121,11 +267,22 @@ def close():
     save_backup()
     quit()
 
-if __name__ != "__main__":
-    allTeams = _load()
-elif __name__ == "__main__":
-    testobj = Team("Test Team", ["Player Name 1", "Player Name 2"])
-    save_backup()
+##if __name__ != "__main__":
+##    allTeams = _load()
+##elif __name__ == "__main__":
+##    testobj = Team("Test Team", ["Player Name 1", "Player Name 2"])
+##    save_backup()
     
+
+
+# ---------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# TOP LEVEL
+intro()
+
+
+
+
+
         
         
