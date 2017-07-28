@@ -131,7 +131,11 @@ def intro():
         count = 0
         Medium = False
         Big = False
-        
+
+##        pygame.mixer.init()
+##        pygame.mixer.music.load("Cheer.mp3")
+##        pygame.mixer.music.play(-1)
+
         while ballx < display_width/2 - 140:    # Taking into account the size of the ball at the time
 
             checkquit()                 # Function that checks if escape key is pressed and if so
@@ -257,7 +261,7 @@ def intro():
                 pygame.display.flip()
                 checkquit()
                 
-            start = begin = button("Begin", buttonx, buttony, buttonwidth,
+            start = button("Begin", buttonx, buttony, buttonwidth,
                    buttonheight, yellow, gold, action = "begin")
 
             
