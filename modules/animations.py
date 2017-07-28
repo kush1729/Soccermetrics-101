@@ -2,6 +2,8 @@ import pygame
 pygame.init()
 import time
 from math import sqrt
+from os import getcwd
+
 # ------------------------------------------
 # Control frames per second:----------------
 clock = pygame.time.Clock()
@@ -32,17 +34,19 @@ gameDisplay = pygame.display.set_mode((display_width, display_height), pygame.FU
 # --------------------------------------------------------------------------------------
 # Images:
 
+folder = getcwd() + "\\images\\"
+
 "BACKGROUND IMAGES:"
-pitchback = pygame.image.load("pitch.png")
+pitchback = pygame.image.load(folder+"pitch.png")
 
 
 "OtherImages:"
-smallball1 = pygame.image.load("smallball1.png")
-smallball2 = pygame.image.load("smallball2.png")
-bigball1 = pygame.image.load("bigball1.png")
-bigball2 = pygame.image.load("bigball2.png")
-mediumball1 = pygame.image.load("mediumball1.png")
-mediumball2 = pygame.image.load("mediumball2.png")
+smallball1 = pygame.image.load(folder+"smallball1.png")
+smallball2 = pygame.image.load(folder+"smallball2.png")
+bigball1 = pygame.image.load(folder+"bigball1.png")
+bigball2 = pygame.image.load(folder+"bigball2.png")
+mediumball1 = pygame.image.load(folder+"mediumball1.png")
+mediumball2 = pygame.image.load(folder+"mediumball2.png")
 
 # ---------------------------------------------------------------------------
 # Any lists:
@@ -292,4 +296,4 @@ def checkquit():
     
 
 # -------------------------------------------------------------------------------------------
-intro()
+

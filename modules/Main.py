@@ -1,5 +1,6 @@
 # Import stuff here -----------------------
-
+import pygame
+from os import getcwd
 ##import random
 ##import math
 # ----------------------------------------------
@@ -34,15 +35,17 @@ pygame.display.update()
 # --------------------------------------------------------------------------------------
 # Images:
 
+folder = getcwd() + "\\images\\"
+
 "BACKGROUND IMAGES:"
-pitchback = pygame.image.load("pitch.png")
+pitchback = pygame.image.load(folder+"pitch.png")
 
 
 "OtherImages:"
-smallball1 = pygame.image.load("smallball1.png")
-smallball2 = pygame.image.load("smallball2.png")
-bigball1 = pygame.image.load("bigball1.png")
-bigball2 = pygame.image.load("bigball2.png")
+smallball1 = pygame.image.load(folder+"smallball1.png")
+smallball2 = pygame.image.load(folder+"smallball2.png")
+bigball1 = pygame.image.load(folder+"bigball1.png")
+bigball2 = pygame.image.load(folder+"bigball2.png")
 # ---------------------------------------------------------------------------
 def background(images, xpos, ypos):         # All three are lists!
     for i in range(len(images)):
@@ -51,15 +54,6 @@ def background(images, xpos, ypos):         # All three are lists!
                                                 
 
 # -------------------------------------------------------------------------------------------
-
-
-
-
-
-
-
-
-
                     
 def main():
     gameDisplay.fill(white)
@@ -128,5 +122,5 @@ def main():
         
 
 # TOP LEVEL STATEMENTS!
-main()
+#main()
         

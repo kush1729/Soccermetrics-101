@@ -9,6 +9,10 @@ sys.path.append(folder+"\\modules")
 
 import players
 import teams
+import animations
+import Main
 
-print teams.allTeams
-teams.close()
+animations.intro()
+
+##print teams.allTeams
+##teams.close()
