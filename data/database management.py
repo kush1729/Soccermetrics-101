@@ -43,16 +43,22 @@ def EditFile(name, type = "p"):
         for i in xrange(n):
             l[i] = pk.load(f)
         f.close()
+        print
+        ReadFile(name, type)
+        print
         f = open(filename, "wb")
         print "The attributes of the file shall be cycled through once."
         print "If you want to change an attribute then type the new attribute."
         print "If there is no change, then do not type anything; just press enter."
+        print "If a field is to be left empty ('None' python type), type '/'"
         for i in xrange(6):
             field = fields[i]
             try:
                 entry = attrtype[field](raw_input("Enter %s: "%field))
                 if entry == "":
                     entry = l[i]
+                elif entry == '/':
+                    entry = None
             except ValueError:
                 entry = l[i]
             l[i] = entry
@@ -64,17 +70,20 @@ def EditFile(name, type = "p"):
 
 def AddFile(type = "p"):
     folder = (playerfolder if type == "p" else teamfolder)
-    name = raw_input("Enter New %s Name: "%("Player" if type == "p" else "Team"))
-    filename = getFileName(name, (playerfolder if type == "p" else teamfolder))
+    name = raw_input("Enter New %s Name (FULL): "%("Player" if type == "p" else "Team"))
+    filename = getFileName(name, folder)
     attrtype = pattrtype if type == "p" else tattrtype
     fields = playerattr if type == "p" else teamattr
     l = "teams_list.txt" if type == "t" else "players_list.txt"
     n = len(fields)
+    print "If a field has to be left empty ('None' python type), type '/'"
     with open(filename, "wb") as f:
         for field in fields:
             try:
                 i = attrtype[field](raw_input("Enter %s: "%field))
                 if i == "":
+                    raise ValueError
+                elif i == "/":
                     i = None
                 pk.dump(i, f)
             except ValueError:
@@ -86,7 +95,48 @@ def AddFile(type = "p"):
     with open(folder+l, "a") as f:
         f.write(name + "\n")
 
-#EditFile("Test Player3", "p")
+print "\nList of Teams:"
+with open(teamfolder+"teams_list.txt") as f:
+    print f.read()
+print "List of Players:"
+with open(playerfolder+"players_list.txt") as f:
+    print f.read()
+print '''Choices:
+Key  Action
+1.   Add A Team File
+2.   Add A Player File
+3.   Read A Team's File
+4.   Read A Player's File
+5.   Edit A Team's File
+6.   Edit A Player's File
+Anything else to quit.
+'''
+while True:
+    ch = raw_input("Enter your choice: ")
+    if ch == "1":
+        AddFile("t")
+        with open(teamfolder+"teams_list.txt") as f:
+            print f.read()
+    elif ch == "2":
+        AddFile("p")
+        with open(playerfolder+"players_list.txt") as f:
+            print f.read()
+    elif ch == "3":
+        name = raw_input("Enter FULL NAME of the team: ")
+        ReadFile(name, "t")
+    elif ch == "4":
+        name = raw_input("Enter FULL NAME of player: ")
+        ReadFile(name, "p")
+    elif ch == "5":
+        name = raw_input("Enter FULL NAME of the team: ")
+        EditFile(name, "t")
+    elif ch == "6":
+        name = raw_input("Enter FULL NAME of the player: ")
+        EditFile(name, "p")
+    else:
+        print "Exiting..."
+        break
+    print
 
         
                     
