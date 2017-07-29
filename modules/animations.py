@@ -38,6 +38,7 @@ folder = getcwd() + "\\images\\"
 
 "BACKGROUND IMAGES:"
 pitchback = pygame.image.load(folder+"pitch.png")
+centrecircle = pygame.image.load(folder+"CentreCircle.png")
 
 
 "OtherImages:"
@@ -47,6 +48,7 @@ bigball1 = pygame.image.load(folder+"bigball1.png")
 bigball2 = pygame.image.load(folder+"bigball2.png")
 mediumball1 = pygame.image.load(folder+"mediumball1.png")
 mediumball2 = pygame.image.load(folder+"mediumball2.png")
+
 
 # ---------------------------------------------------------------------------
 # Any lists:
@@ -118,6 +120,7 @@ def intro():
     gameon = True
     background([pitchback], [0], [0])
     ballsize = smallball1.get_size()
+    bigballsize = bigball1.get_size()
     while gameon:
         # Variables:
         ballx, bally = 5 + ballsize[0], display_height/2
@@ -163,7 +166,12 @@ def intro():
             
             bally = display_height/2 - s[1]/2
             background([pitchback, ballimg], [backx, ballx], [backy, bally])
-            ballx += 25
+            
+            if ballx + 25 > (display_width/2 - bigballsize[0]/2):
+                ballx = (display_width/2 - bigballsize[0]/2)
+                
+            else:
+                ballx += 25
             
             
             
@@ -195,7 +203,7 @@ def intro():
         radius = 10
         a, b, c, = 255, 255, 255  
         
-        while radius < 156:
+        while radius < 155:
             checkquit() # Check if you want to quit
 
             pygame.draw.circle(gameDisplay, (a, b, c), (display_width/2, display_height/2), radius)
@@ -271,19 +279,58 @@ def intro():
             
             checkquit()
             if start:
-                gameDisplay.fill(white)
-                message_to_screen("UNDER CONSTRUCTION", black,
-                                  (display_width/2, display_height/2), 35)
-                message_to_screen("Press ESC to quit", black,
-                                  (display_width/2, display_height/2+40), 20)
-                pygame.display.flip()
+                while radius < max(display_width, display_height):
+                    checkquit()
+                    radius += 25
+                    pygame.draw.circle(gameDisplay, black, centre, radius)
+                    pygame.display.flip()
+                    time.sleep(0.02)
+
+                backsize = centrecircle.get_size()
+                backx = (display_width-backsize[0])/2
+                backy = (display_height - backsize[1])/2
+                background([centrecircle], [backx], [backy])
+                
                 while True:
                     checkquit()
+                    if radius - 20 > 0:
+                        radius -= 20
+                    else:
+                        break
+                    pygame.draw.circle(gameDisplay, black, centre, radius)
+                    pygame.display.flip()
+                    background([centrecircle], [backx], [backy])
+
+                    
+                    
+                pygame.display.flip()
+                Choose_Option()
+                
+                
+                
+                    
+
+                
             
             
 
+def Choose_Option():
+    gameDisplay.fill(white)
+    choosing = True
+    backsize = centrecircle.get_size()
+    backx = (display_width-backsize[0])/2
+    backy = (display_height - backsize[1])/2
+    background([centrecircle], [backx], [backy])
+
+
+    
+    while choosing:
+        background([centrecircle], [backx], [backy])
+        checkquit()
         
-
+        
+    
+        
 
 def checkquit():
     for event in pygame.event.get():
@@ -296,4 +343,4 @@ def checkquit():
     
 
 # -------------------------------------------------------------------------------------------
-
+intro()
