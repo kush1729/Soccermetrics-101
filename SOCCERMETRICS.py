@@ -10,7 +10,6 @@ sys.path.append(folder+"\\modules")
 import players
 import teams
 import animations
-import Main
 
 animations.intro()
 
