@@ -1,40 +1,42 @@
+"""module for all specific animation functions.
+All functions in this module will be only for specific animations/transitions/specific visual effects that will be required.
+
+this module does not contain any generic functions which will be used repeatedly (eg does not have text to screen functions
+etc). Refer to GUIanimations for details on generic functions
+
+Also, for ease of use and to avoid any issues with namespaces etc, pass all required variables as function parameters.
+for example, pass gameDisplay as a parameter.
+Note that this will not be the main file run, and so should be import friendly
+Hence, this should not run anything (like initializing the screen surface) unless explicitly checked that
+the namespace is __main__"""
+
 import pygame
 pygame.init()
 import time
 from math import sqrt
 from os import getcwd
+import GUIelements as gui
 
 # ------------------------------------------
 # Control frames per second:----------------
 clock = pygame.time.Clock()
 # ----------------------------------------------------
 #COLOURS: (Refer to RGB dictionary)----------------------------------------------------------
-white = (255, 255, 255)
-black = (0, 0, 0)
-red = (255, 0, 0)
-green = (0, 255, 0)
-darkgreen = (34, 139, 34)
-yellow = (255, 255, 0)
-gold = (255, 215, 0)
-goldenrod = (218, 165, 32)
-blue = (0, 0, 255)
-lightblue = (0, 191, 255)
-darkblue = (0, 0, 220)
-lightgrey = (218, 218, 218)
-tomato = (255, 99, 71)
-sienna = (160, 82, 45)
-darkorange = (255, 140, 0)
-purple = (0, 255, 255)
+from Colours import *
+
 # --------------------------------------------------------------------------
 #IMPORTANT CONSTANTS FOR DESIGN OF GAME DISPLAY------------------------------------------
-display_width, display_height = 1000, 750
-gameDisplay = pygame.display.set_mode((display_width, display_height), pygame.FULLSCREEN)
 ##gameDisplay.fill(white)
 ##pygame.display.update()
 # --------------------------------------------------------------------------------------
 # Images:
 
-folder = getcwd() + "\\images\\"
+if __name__ != "__main__":
+    folder = getcwd() + "\\modules\\images\\"
+else:
+    folder = getcwd() + "\\images\\"
+    display_width, display_height = 1000, 750
+    gameDisplay = pygame.display.set_mode((display_width, display_height), pygame.FULLSCREEN)
 
 "BACKGROUND IMAGES:"
 pitchback = pygame.image.load(folder+"pitch.png")
@@ -52,12 +54,8 @@ mediumball2 = pygame.image.load(folder+"mediumball2.png")
 
 # ---------------------------------------------------------------------------
 # Any lists:
-allTeams = []
+#allTeams = []
 # ----------------------------------------------------------------------------------------
-
-
-
-
 
 """The functions that are for visual effect are defined here!!"""
 def background(images, xpos, ypos):         # All three are lists!
@@ -65,56 +63,39 @@ def background(images, xpos, ypos):         # All three are lists!
         gameDisplay.blit(images[i], [xpos[i], ypos[i]])
         # No updating coz otherwise there'll be a slight lag between background and foreground
 
+def checkquit():
+    for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE: 
+                    pygame.quit()
+                    quit()
 
-def button(textinbutton, x, y, width1, height1, inactivecolour,
-           activecolour, action = None):
-    cur = pygame.mouse.get_pos()
-    click = pygame.mouse.get_pressed()
-
-    if x + width1 > cur[0] > x and y + height1 > cur[1] > y:
-        
-        pygame.draw.rect(gameDisplay, activecolour, (x, y, width1,
-                                                     height1))
-    
-        if click[0] == 1 and action <> None:
-            if action.lower() == "begin":
-                return True
-                
-
-            return action
-    else:
-        pygame.draw.rect(gameDisplay, inactivecolour, (x, y, width1, height1))
-        
-    text_to_button(textinbutton, black, x, y, width1, height1)
-    pygame.display.update()
-
-
-
-    
-
-def text_objects(text, colour, size, numreturn = 2):
-##    font_dict = {'small':smallfont, 'medium':medfont, 'large':largefont, 'smallmed':smallmedfont, 'mediumlarge':mediumlargefont}
-    #size is font size as an integer
-    
-    textSurface = pygame.font.SysFont("comicsansms", size).render(text, True, colour)
-    if numreturn == 2: return textSurface, textSurface.get_rect()
-    else: return textSurface.get_rect()
-
-def text_to_button(msg, color, btnx, btny, btnwidth, btnheight, size = 25):
-    textSurf , textRect = text_objects(msg, color, size)
-    textRect.center = ((btnx + (btnwidth / 2)), (btny + (btnheight / 2)))
-    gameDisplay.blit(textSurf, textRect)
-
-def message_to_screen(msg, color, center_loc, size):
-    textSurf , textRect = text_objects(msg, color, size)
-    textRect.center = center_loc
-    gameDisplay.blit(textSurf, textRect)
-    return textRect
-
-
+##
+##def button(textinbutton, x, y, width1, height1, inactivecolour,
+##           activecolour, action = None):
+##    cur = pygame.mouse.get_pos()
+##    click = pygame.mouse.get_pressed()
+##
+##    if x + width1 > cur[0] > x and y + height1 > cur[1] > y:
+##        
+##        pygame.draw.rect(gameDisplay, activecolour, (x, y, width1,
+##                                                     height1))
+##    
+##        if click[0] == 1 and action <> None:
+##            if action.lower() == "begin":
+##                return True
+##                
+##
+##            return action
+##    else:
+##        pygame.draw.rect(gameDisplay, inactivecolour, (x, y, width1, height1))
+##        
+##    text_to_button(textinbutton, black, x, y, width1, height1)
+##    pygame.display.update()
+##
 
 # Main INTRO Function! 
-def intro():
+def intro(gameDisplay, display_width, display_height):
     gameDisplay.fill(white)
     pygame.display.update()
     gameon = True
@@ -240,7 +221,8 @@ def intro():
         for letter in text:
             textx += change    
             texty = centre[1] - sqrt(temp_rad ** 2 - (textx - centre[0])**2)   # Using the circle formula to get coordinates of points on the edge of it
-            message_to_screen(letter, white, (textx, texty), textsize)       # This function gets the letters on the screen
+            # This function gets the letters on the screen
+            gui.message_to_screen(gameDisplay, letter, white, (textx, texty), textsize) 
             pygame.display.update()
             time.sleep(0.2)             # Makes the letters appear one at a time for visual effect
 
@@ -255,7 +237,10 @@ def intro():
         buttonwidth = 200
         buttonx = display_width/2 - buttonwidth/2
         buttony = display_height/2 - buttonheight/2
-
+        #Button.__init__(x, y, height, width, action = Button.RETURN_TRUE, inactivecolour = red,
+        #                activecolour = orange, text = None, textcolour = black, size = 25)
+        button = gui.Button(buttonx, buttony, buttonwidth,
+                   buttonheight, inactivecolour = yellow, activecolour = gold, text = "Begin")
 
         colour = [255, 255, 255]        # i.e., Starting colour of the button
         while True:
@@ -272,11 +257,9 @@ def intro():
                 time.sleep(0.002)
                 pygame.display.flip()
                 checkquit()
-                
-            start = button("Begin", buttonx, buttony, buttonwidth,
-                   buttonheight, yellow, gold, action = "begin")
 
-            
+            start = button.get_click()
+            button.blit(gameDisplay, True)
             checkquit()
             if start:
                 while radius < max(display_width, display_height):
@@ -304,17 +287,11 @@ def intro():
                     
                     
                 pygame.display.flip()
-                Choose_Option()
+                Choose_Option(gameDisplay, display_width, display_height)
                 
-                
-                
-                    
+           
 
-                
-            
-            
-
-def Choose_Option():
+def Choose_Option(gameDisplay, display_width, display_height):
     gameDisplay.fill(white)
     choosing = True
     backsize = centrecircle.get_size()
@@ -327,20 +304,8 @@ def Choose_Option():
     while choosing:
         background([centrecircle], [backx], [backy])
         checkquit()
-        
-        
-    
-        
-
-def checkquit():
-    for event in pygame.event.get():
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE: 
-                    pygame.quit()
-                    quit()
-
-        
-    
+            
 
 # -------------------------------------------------------------------------------------------
-intro()
+if __name__ == '__main__':
+    intro(gameDisplay, display_width, display_height)
