@@ -11,7 +11,6 @@ Hence, this should not run anything (like initializing the screen surface) unles
 the namespace is __main__"""
 
 import pygame
-pygame.init()
 import time
 from math import sqrt
 from os import getcwd
@@ -26,8 +25,11 @@ from Colours import *
 
 # --------------------------------------------------------------------------
 #IMPORTANT CONSTANTS FOR DESIGN OF GAME DISPLAY------------------------------------------
-##gameDisplay.fill(white)
-##pygame.display.update()
+if __name__ == '__main__':
+    pygame.init()
+    display_width, display_height = 1000, 750
+    gameDisplay = pygame.display.set_mode((display_width, display_height), pygame.FULLSCREEN)
+
 # --------------------------------------------------------------------------------------
 # Images:
 
@@ -35,8 +37,6 @@ if __name__ != "__main__":
     folder = getcwd() + "\\modules\\images\\"
 else:
     folder = getcwd() + "\\images\\"
-    display_width, display_height = 1000, 750
-    gameDisplay = pygame.display.set_mode((display_width, display_height), pygame.FULLSCREEN)
 
 "BACKGROUND IMAGES:"
 pitchback = pygame.image.load(folder+"pitch.png")
@@ -53,8 +53,6 @@ mediumball2 = pygame.image.load(folder+"mediumball2.png")
 
 
 # ---------------------------------------------------------------------------
-# Any lists:
-#allTeams = []
 # ----------------------------------------------------------------------------------------
 
 """The functions that are for visual effect are defined here!!"""
@@ -69,30 +67,6 @@ def checkquit():
                 if event.key == pygame.K_ESCAPE: 
                     pygame.quit()
                     quit()
-
-##
-##def button(textinbutton, x, y, width1, height1, inactivecolour,
-##           activecolour, action = None):
-##    cur = pygame.mouse.get_pos()
-##    click = pygame.mouse.get_pressed()
-##
-##    if x + width1 > cur[0] > x and y + height1 > cur[1] > y:
-##        
-##        pygame.draw.rect(gameDisplay, activecolour, (x, y, width1,
-##                                                     height1))
-##    
-##        if click[0] == 1 and action <> None:
-##            if action.lower() == "begin":
-##                return True
-##                
-##
-##            return action
-##    else:
-##        pygame.draw.rect(gameDisplay, inactivecolour, (x, y, width1, height1))
-##        
-##    text_to_button(textinbutton, black, x, y, width1, height1)
-##    pygame.display.update()
-##
 
 # Main INTRO Function! 
 def intro(gameDisplay, display_width, display_height):
@@ -225,11 +199,6 @@ def intro(gameDisplay, display_width, display_height):
             gui.message_to_screen(gameDisplay, letter, white, (textx, texty), textsize) 
             pygame.display.update()
             time.sleep(0.2)             # Makes the letters appear one at a time for visual effect
-
-            
-            
-            
-                
 
 
         # More Variables:
