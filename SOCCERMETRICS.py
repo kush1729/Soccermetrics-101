@@ -10,8 +10,12 @@ sys.path.append(folder+"\\modules")
 import players
 import teams
 import animations
-
-animations.intro()
+import pygame
+pygame.init()
+display_width = 1000
+display_height = 700
+gameDisplay = pygame.display.set_mode((display_width, display_height),pygame.FULLSCREEN)
+animations.intro(gameDisplay, display_width, display_height)
 
 ##print teams.allTeams
 ##teams.close()
