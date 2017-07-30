@@ -110,7 +110,75 @@ as defined by the name of the constant."""
         if flag:
             return self.action()
 
-
-
-
+class Dragable(object):
+    '''Object that can be dragged by the mouse.
+Mouse has to be held while shifting.
+'''
+    def __init__(self, x, y, width, height, colour = black, restrict = 'y'):
+        ''''restrict' restricts the movement of the object along a particular axis
+restrict can only be 'y', 'x' to lock the y axis and x axis respectively
+anything else does not lock any axis.'''
+        self.x = x
+        self.y = y
+        self.movex = not(restrict == 'x')
+        self.movey = not(restrict == 'y')
+        self.wd = width
+        self.ht = height
+        self.drag = False
+        self.colour = colour
+        self.dx = 0
+        self.dy = 0
+    def __is_inside(self, (mx, my)):
+        return (self.x < mx < self.x + self.wd) and (self.y < my < self.y + self.ht)
+    def get_dragged(self):
+        cur = pg.mouse.get_pos()
+        clicked = pg.mouse.get_pressed()[0]
+        if not self.drag and self.__is_inside(cur) and clicked:
+            self.drag = True
+            self.dx = cur[0] - self.x
+            self.dy = cur[1] - self.y
+        if self.drag and clicked:
+            if self.movex:
+                self.x = cur[0] - self.dx
+            if self.movey:
+                self.y = cur[1] - self.dy
+        elif self.drag and not clicked:
+            self.drag = False
+            self.dx = 0
+            self.dy = 0
+    def blit(self, surface, update = False):
+        pg.draw.rect(surface, self.colour, (self.x, self.y, self.wd, self.ht))
+        if update: pygame.display.update()
+            
+##class ListBox(object): #coming up!
+##    def __init__(self, x, y, width, height, *items):
+##        self.x = a
+##        self.y = y
+##        self.wd = width
+##        self.ht = height
+##        self.items = items
+####(x, y, width, height, action = RETURN_TRUE, inactivecolour = red, activecolour = orange,
+####                 text = None, textcolour = black, size = 25)
+##        self.uparrow = Button(self.x+self.wd-5, self.y, 
+##    def __iter__(self):
+##        for i in self.items:
+##            yield i
+##    def blit(self):
+        
+if __name__ == '__main__':
+    pg.init()
+    screen = pg.display.set_mode((500, 500))
+    screen.fill(white)
+    clock = pg.time.Clock()
+    obj = Dragable(25, 25, 100, 50, restrict = 'x')
+    while True:
+        for e in pg.event.get():
+            if e.type == pg.QUIT or (e.type == pg.KEYDOWN and e.key == pg.K_ESCAPE):
+                pg.quit()
+                quit()
+        screen.fill(white)
+        obj.get_dragged()
+        obj.blit(screen)
+        clock.tick(10)
+        pg.display.update()
         
