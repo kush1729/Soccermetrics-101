@@ -90,11 +90,15 @@ when the action function is called, this class will return whatever the action()
 if action is a constant defined in the class attributes of Button, then action will be assigned a particular null function
 as defined by the name of the constant."""
         super(Button, self).__init__(x, y, width, height)
+        def tempTrue(): return True
+        def tempFalse(): return False
+        def tempNone(): return None
         if action == Button.RETURN_TRUE:
-            def tempTrue(): return True
-            def tempFalse(): return False
-            def tempNone(): return None
-            action = temp
+            action = tempTrue
+        elif action == Button.RETURN_FALSE:
+            action = tempFalse
+        elif action == Button.RETURN_NONE:
+            action = tempNone
         self.action = action
         self.inactive = inactivecolour
         self.active = activecolour
