@@ -215,7 +215,7 @@ steps gives the jumps that the object will make'''
         pg.draw.rect(surface, c, (self.x, self.y, self.wd, self.ht))
         if update: pygame.display.update()
             
-class ListBox(object): #coming up!
+class ListBox(object):
     def __init__(self, x, y, width, height, ind_ht, bkgcolour, *items):
         #ind_ht is the individual height of each box in the ListBox
         #the height will auto adjust to ensure that ind_ht divides height
@@ -237,10 +237,13 @@ class ListBox(object): #coming up!
         if len(items) == 1 and (isinstance(items[0], list) or isinstance(itmes[0], tuple)):
             items = tuple(items[0])
         if len(items) < self.numvisible:
-            items += ('',)*(n-len(items))
+            items += ('',)*(self.numvisible-len(items))
         self.items = items
         self.ind_ht = ind_ht
-        self.hidden = len(items) - self.numvisible
+        if items[-1] != '':
+            self.hidden = len(items) - self.numvisible
+        else:
+            self.hidden = 0
 ##(x, y, width, height, action = RETURN_TRUE, inactivecolour = red, activecolour = orange,
 ##                 text = None, textcolour = black, size = 25)
         self.uparrow = Button(self.x+self.wd, self.y, self.arrowsize, self.arrowsize, Button.RETURN_TRUE,
@@ -259,7 +262,7 @@ class ListBox(object): #coming up!
         try:
             step = remspace/remitems
         except ZeroDivisionError:
-            step = 0
+            return None
         topmost = self.y + self.uparrow.ht 
         bottom = topmost + step*self.hidden
         return Dragable(self.x+self.wd, self.y+self.uparrow.wd, self.uparrow.wd, ht, colour = grey, restrict = 'x',
@@ -270,7 +273,7 @@ class ListBox(object): #coming up!
             yield i
 
     def __drag_scroller(self):
-        if self.hidden == 0: return
+        if self.hidden == 0 or self.scroll == None: return
         topmost = self.y+self.uparrow.ht
         buckets = [topmost+self.scroll.steps*i for i in xrange(self.hidden+1)]
         if self.scroll.get_dragged():
@@ -281,18 +284,22 @@ class ListBox(object): #coming up!
         if self.downarrow.get_click():
             if self.pos < len(self.items) - self.numvisible:
                 self.pos += 1
-                self.scroll.y += self.scroll.steps
+                if self.scroll != None:
+                    self.scroll.y += self.scroll.steps
         elif self.uparrow.get_click():
             if self.pos > 0:
                 self.pos -= 1
-                self.scroll.y -= self.scroll.steps
+                if self.scroll != None:
+                    self.scroll.y -= self.scroll.steps
     
     def blit(self, screen, update = False):
         pg.draw.rect(screen, self.bkgcolour, (self.x+self.wd, self.y, self.uparrow.wd, self.ht))
         self.uparrow.blit(screen, update = False)
         self.downarrow.blit(screen, update = False)
-        #pg.draw.rect(screen, grey, self.scroll)
-        self.scroll.blit(screen, update = False)
+        if self.scroll == None:
+            pg.draw.rect(screen, grey, (self.x+self.wd, self.y+self.uparrow.ht, self.uparrow.wd, self.ht - 2*self.arrowsize))
+        else:
+            self.scroll.blit(screen, update = False)
         pg.draw.rect(screen, black, (self.x-1, self.y-1, self.wd+self.uparrow.wd+2, self.ht+2), 1)
         pg.draw.line(screen, black, (self.x+self.wd, self.y), (self.x+self.wd, self.y+self.ht))
         pg.draw.rect(screen, self.bkgcolour, (self.x, self.y, self.wd, self.ht))
@@ -309,7 +316,7 @@ if __name__ == '__main__':
     screen = pg.display.set_mode((500, 500))
     screen.fill(white)
     clock = pg.time.Clock()
-    obj = ListBox(10, 10, 200, 400, 100, green, ['ITEM %d'%(k) for k in xrange(8)])
+    obj = ListBox(10, 10, 200, 400, 100, green, ['ITEM %d'%(k) for k in xrange(3)])
     #s = Dragable(50, 50, 50, 200, colour = red, restrict = 'x',  yinterval = (50, 150),steps = 25)
     while True:
         for e in pg.event.get():
@@ -319,10 +326,10 @@ if __name__ == '__main__':
         screen.fill(white)
         obj.shift()
 ##        s.get_dragged()
-        for i in xrange(20):
-            y = 10+20*i
-            pg.draw.line(screen, black, (0, y), (400, y))
-            message_to_screen(screen, str(y), black, (450, y), 20)
+##        for i in xrange(20):
+##            y = 10+20*i
+##            pg.draw.line(screen, black, (0, y), (400, y))
+##            message_to_screen(screen, str(y), black, (450, y), 20)
 ##        s.blit(screen)
         obj.blit(screen)
         clock.tick(20)
