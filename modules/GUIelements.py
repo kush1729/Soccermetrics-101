@@ -114,7 +114,8 @@ class Dragable(object):
     '''Object that can be dragged by the mouse.
 Mouse has to be held while shifting.
 '''
-    def __init__(self, x, y, width, height, colour = black, restrict = None, xinterval = None, yinterval = None, steps = 1):
+    def __init__(self, x, y, width, height, colour = black, restrict = None, xinterval = (-50, 100000),
+                 yinterval = (-50, 100000), steps = 1):
         ''''restrict' restricts the movement of the object along a particular axis
 restrict can only be 'y', 'x' to lock the y axis and x axis respectively
 anything else does not lock any axis.
@@ -133,8 +134,8 @@ steps gives the jumps that the object will make'''
         self.colour = colour
         self.dx = 0
         self.dy = 0
-        self.xlim = xinterval
-        self.ylim = yinterval
+        self.xlim = xinterval 
+        self.ylim = yinterval 
         self.steps = steps
     def __is_inside(self, (mx, my)):
         return (self.x < mx < self.x + self.wd) and (self.y < my < self.y + self.ht)
@@ -143,27 +144,33 @@ steps gives the jumps that the object will make'''
         clicked = pg.mouse.get_pressed()[0]
         if not self.drag and self.__is_inside(cur) and clicked:
             self.drag = True
-            self.dx = cur[0] - self.x
-            self.dy = cur[1] - self.y
+            self.dx = self.steps*((cur[0] - self.x)//self.steps)
+            self.dy = self.steps*((cur[1] - self.y)//self.steps)
         if self.drag and clicked:
-            if self.movex and (self.xlim == None or self.xlim[0]<=self.x<=self.xlim[1]):
-                if self.xlim[0] <= self.steps*((cur[0] - self.dx)//self.steps) <= self.xlim[1]:
-                    self.x = self.steps*((cur[0] - self.dx)//self.steps)
+            
+            if self.movex and (self.xlim[0]<=self.x<=self.xlim[1]):
+                newx = self.steps*((cur[0] - self.dx)//self.steps)
+                if self.xlim[0] <= newx <= self.xlim[1]:
+                    self.x = newx
             elif self.x > self.xlim[1]:
                 self.x = self.xlim[1]
             elif self.x < self.xlim[0]:
                 self.x = self.xlim[0]
-            if self.movey and (self.ylim == None or self.ylim[0]<=self.y<=self.ylim[1]):
+                
+            if self.movey and (self.ylim[0]<=self.y<=self.ylim[1]):
                 if self.ylim[0]<= self.steps*((cur[1] - self.dy)//self.steps) <=self.ylim[1]:
                     self.y = self.steps*((cur[1] - self.dy)//self.steps)
             elif self.y > self.ylim[1]:
                 self.y = self.ylim[1]
             elif self.y < self.ylim[0]:
                 self.y = self.ylim[0]
+                
         elif self.drag and not clicked:
             self.drag = False
             self.dx = 0
             self.dy = 0
+        return self.drag
+    
     def blit(self, surface, update = False):
         pg.draw.rect(surface, self.colour, (self.x, self.y, self.wd, self.ht))
         if update: pygame.display.update()
@@ -201,12 +208,12 @@ class ListBox(object): #coming up!
         self.downarrow = Button(self.x+self.wd, self.y+self.ht-self.arrowsize, self.arrowsize, self.arrowsize,
                                 Button.RETURN_TRUE, grey, lightgrey, text = '\\/', size = self.arrowsize/5)
         self.bkgcolour = bkgcolour
-        if self.ind_ht * len(self.items) > self.ht:
+        if len(self.items) > self.numvisible:
             l = len(self.items)
-            h = (self.ht - 2*self.arrowsize)*(n/l)
-            ul = self.y+self.ht- self.arrowsize -h
-            rem = self.ht - self.arrowsize - h
-            extra = l - n
+            h = ((self.ht - 2*self.arrowsize)*n)/l
+            ul = self.y+self.ht- self.arrowsize -h 
+            rem = self.ht - 2* self.arrowsize - h
+            extra = l - n 
             s = rem/extra
             self.scroll = Dragable(self.x+self.wd, self.y+self.arrowsize, self.arrowsize, h,
                                    restrict = 'x', yinterval = (self.y+self.arrowsize,ul), steps = s)
@@ -216,10 +223,19 @@ class ListBox(object): #coming up!
     def __iter__(self):
         for i in self.items:
             yield i
-    def scroll(self):
+    def shift(self):
         if self.scroll == None: return
+        self.scroll.get_dragged()
         if self.scroll.drag:
             pass
+        elif self.downarrow.get_click():
+            if self.pos < len(self.items) - self.numvisible:
+                self.pos += 1
+                self.scroll.y += self.scroll.steps
+        elif self.uparrow.get_click():
+            if self.pos > 0:
+                self.pos -= 1
+                self.scroll.y -= self.scroll.steps
     def blit(self, screen, update = False):
         pg.draw.rect(screen, self.bkgcolour, (self.x, self.y, self.wd, self.ht))
         self.uparrow.blit(screen, update = False)
@@ -239,15 +255,16 @@ if __name__ == '__main__':
     screen = pg.display.set_mode((500, 500))
     screen.fill(white)
     clock = pg.time.Clock()
-    obj = ListBox(10, 10, 125, 310, 60, red, 'ITEM 1', 'ITEM 2', 'ITEM 3', 'ITEM 4', 'ITEM 5') 
+    obj = ListBox(10, 10, 200, 400, 100, red, ['ITEM 1', 'ITEM 2', 'ITEM 3', 'ITEM 4', 'ITEM 5', 'ITEM 6', 'ITEM 7', 'ITEM 8'] )
     while True:
         for e in pg.event.get():
             if e.type == pg.QUIT or (e.type == pg.KEYDOWN and e.key == pg.K_ESCAPE):
                 pg.quit()
                 quit()
         screen.fill(white)
-        #obj.get_dragged()
+        obj.shift()
         obj.blit(screen)
+##        obj.scroll.get_dragged()
         clock.tick(10)
         pg.display.update()
         
