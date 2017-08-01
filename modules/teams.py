@@ -43,7 +43,7 @@ If obj is an int object, then it will be assumed to be an ELO rating."""
         """If obj is of team type, then checks if they have the same name.
 Otherwise, the object should be an integer, which will be compared with the ELO rating"""
         if isinstance(obj, int):
-            return self.standing == int
+            return self.standing == obj
         elif isinstance(obj, Team):
             return self.name == obj.name
         raise NotImplemented
@@ -77,19 +77,25 @@ Otherwise, the object should be an integer, which will be compared with the ELO 
         for player in self.player_list:
             player.send_info()
             
-def close():
+def close(iterate = False):
     for team in allTeams:
         allTeams[team].send_info()
+        if iterate:
+            yield 0
     #quit()
-    
-allTeams = dict()
 
-if __name__ != "__main__":
+def load(iterate = False):
     folder = os.getcwd() + "\\data\\teams\\"
     teamlistfile = open(folder+"teams_list.txt", "rb")
     for tname in teamlistfile:
         tname = tname.rstrip("\n")
         allTeams[tname] = Club(tname)
+        if iterate:
+            yield 0
+allTeams = dict()
+
+if __name__ != "__main__":
+    pass
 elif __name__ == "__main__":
     while True:
         folder = os.getcwd().rstrip("\\modules") + "\\data\\teams\\"
