@@ -91,7 +91,9 @@ if action is a constant defined in the class attributes of Button, then action w
 as defined by the name of the constant."""
         super(Button, self).__init__(x, y, width, height)
         if action == Button.RETURN_TRUE:
-            def temp(): return True
+            def tempTrue(): return True
+            def tempFalse(): return False
+            def tempNone(): return None
             action = temp
         self.action = action
         self.inactive = inactivecolour
