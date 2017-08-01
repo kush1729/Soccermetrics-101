@@ -335,7 +335,7 @@ def quit_function():
         background([pitchback], [0], [0])
         pygame.draw.circle(gameDisplay, black, centre, radius)
         pygame.display.flip()
-        time.sleep(0.02)
+        
 
     text = "Thank You for Using SoccerMetrics-101!"
     textsize = 40
@@ -386,13 +386,34 @@ def quit_function():
 
         
 
-    
+    gameDisplay.fill(black)
+    time.sleep(0.5)
+
+    rect1x = 0
+    rect1y = display_height
+    rect1w = display_width
+    rect1h = 0
+
+    rect2x = rect1x
+    rect2y = 0
+    rect2w = rect1w
+    rect2h = rect1h
+
+    while rect1y > rect2y + rect2h:
+        rect1y -= 25
+        rect1h = display_height + 10 - rect1y
+
+        
+        rect2h += 25
+        
+        pygame.display.update([[rect1x, rect1y, rect1w, rect1h], [rect2x, rect2y, rect2w, rect2h]])
+        time.sleep(0.02)
         
 
 
     
 
-    time.sleep(2)
+    time.sleep(0.5)
     pygame.quit()
     quit()
 
