@@ -1,2 +1,39 @@
-Test Team Name
-Second Test Team
+Chelsea FC
+Manchester City FC
+Manchester United FC
+Arsenal FC
+Liverpool FC
+Everton FC 
+West Ham FC
+Tottenham Hotspur FC
+Southampton FC
+Stoke City FC
+Leicester City FC
+Newcastle FC
+Bournemouth
+Crystal Palace FC
+West Bromwich Albion FC
+Watford FC
+Swansea City FC
+Burnley FC
+Brighton and Hove Albion FC
+Huddersfield Town AFC
+Real Madrid CF
+FC Barcelona
+Atlético Madrid
+Sevilla FC
+Villarreal CF
+Real Sociedad
+Athletic Bilbao
+RCD Espanyol
+Deportivo Alaves
+SD Eibar
+Malaga CF
+Valencia CF
+Celta de Vigo
+UD Las Palmas
+Real Betis
+Deportivo de La Coruna
+CD Leganes
+Levante UD
+Girona FC
