@@ -50,14 +50,20 @@ bigball1 = pygame.image.load(folder+"bigball1.png")
 bigball2 = pygame.image.load(folder+"bigball2.png")
 mediumball1 = pygame.image.load(folder+"mediumball1.png")
 mediumball2 = pygame.image.load(folder+"mediumball2.png")
+fact1 = pygame.image.load(folder+"Fact1.png")
+fact2 = pygame.image.load(folder+"Fact2.png")
+fact3 = pygame.image.load(folder+"Fact3.png")
+fact4 = pygame.image.load(folder+"Fact4.png")
+##fact1 = pygame.image.load(folder+"Fact1.png")
 
 
 # ---------------------------------------------------------------------------
+factlist = [fact1, fact2, fact3, fact4] 
 # ----------------------------------------------------------------------------------------
 
 """The functions that are for visual effect are defined here!!"""
 def background(images, xpos, ypos):         # All three are lists!
-    for i in range(len(images)):
+    for i in xrange(len(images)):
         gameDisplay.blit(images[i], [xpos[i], ypos[i]])
         # No updating coz otherwise there'll be a slight lag between background and foreground
 
@@ -70,6 +76,19 @@ def checkquit():
 
 # Main INTRO Function! 
 def intro(gameDisplay, display_width, display_height):
+
+    start = False
+    while not start:
+        gameDisplay.fill(white)
+        pygame.display.update()
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    pygame.quit()
+                    quit()
+                else:
+                    start = True
+                    break
     gameDisplay.fill(white)
     pygame.display.update()
     gameon = True
@@ -80,12 +99,12 @@ def intro(gameDisplay, display_width, display_height):
         # Variables:
         ballx, bally = 5 + ballsize[0], display_height/2
         balllist = [bigball1, bigball2]
-        for i in range(len(balllist)):
+        for i in xrange(len(balllist)):
             balllist[i] = pygame.transform.scale(balllist[i], (20,20))
         bigballlist = [bigball1, bigball2]
         mediumballlist = [mediumball1, mediumball2]
         backx, backy = 0,0
-        fps = 60
+        fps = 13
         
         # --------------------------------
         
@@ -109,13 +128,13 @@ def intro(gameDisplay, display_width, display_height):
             if (s[0] > 180 or s[1] > 180) and not Big:              # Resizing a very small image to large sizes can cause
                 balllist = bigballlist                                  #  loss in resolution
                                                                         
-                for i in range(len(balllist)):
+                for i in xrange(len(balllist)):
                     balllist[i] = pygame.transform.scale(balllist[i], [(9 *180)/5 , (9*180)/5])  # i.e., making it approx 1.8 times its size
                 Big = True
 
             elif (s[0] > 50 or s[1] > 50) and not Medium:
                 balllist = mediumballlist
-                for i in range(len(balllist)):
+                for i in xrange(len(balllist)):
                     balllist[i] = pygame.transform.scale(balllist[i], [(9 *50)/5 , (9*50)/5])
                 Medium = True
             
@@ -137,7 +156,7 @@ def intro(gameDisplay, display_width, display_height):
                 
             if s[0] < 280 and s[1] < 280 and count % 2 == 0: 
                 
-                for i in range(len(balllist)):
+                for i in xrange(len(balllist)):
                     size = balllist[i].get_size()
                     balllist[i] = pygame.transform.scale(balllist[i], [(9 *size[0])/5 , (9*size[1])/5])
                         
@@ -193,12 +212,13 @@ def intro(gameDisplay, display_width, display_height):
 
                   
         for letter in text:
+            checkquit()
             textx += change    
             texty = centre[1] - sqrt(temp_rad ** 2 - (textx - centre[0])**2)   # Using the circle formula to get coordinates of points on the edge of it
             # This function gets the letters on the screen
             gui.message_to_screen(gameDisplay, letter, white, (textx, texty), textsize) 
             pygame.display.update()
-            time.sleep(0.2)             # Makes the letters appear one at a time for visual effect
+            time.sleep(0.1)             # Makes the letters appear one at a time for visual effect
 
 
         # More Variables:
@@ -207,7 +227,7 @@ def intro(gameDisplay, display_width, display_height):
         buttonx = display_width/2 - buttonwidth/2
         buttony = display_height/2 - buttonheight/2
         #Button.__init__(x, y, height, width, action = Button.RETURN_TRUE, inactivecolour = red,
-        #                activecolour = orange, text = None, textcolour = black, size = 25)
+        #                activecolour = oxrange, text = None, textcolour = black, size = 25)
         button = gui.Button(buttonx, buttony, buttonwidth,
                    buttonheight, inactivecolour = yellow, activecolour = gold, text = "Begin")
 
@@ -215,7 +235,7 @@ def intro(gameDisplay, display_width, display_height):
         while True:
             
             while colour <> list(yellow):       # The button fades in from white to yellow
-                for i in range(3):
+                for i in xrange(3):
                     
                     if colour[i] < yellow[i]:
                         colour[i] += 1
@@ -267,13 +287,39 @@ def Choose_Option(gameDisplay, display_width, display_height):
     backx = (display_width-backsize[0])/2
     backy = (display_height - backsize[1])/2
     background([centrecircle], [backx], [backy])
-
-
     
+    
+    count = 0
+    seconds = 3
+    backx = backy = 0
     while choosing:
-        background([centrecircle], [backx], [backy])
-        checkquit()
+        
+        image = factlist[count]
+        size = image.get_size()
+        
+        gameDisplay.fill(black)
+        
+        if size[1] > display_height:
+            backy = -(size[1]-display_height)/2
+        elif size[1] < display_height:
+            backy = (abs(size[1]-display_height))/2
+
+        image = image.convert()
+        for i in xrange(255, 0, -1):
+            image.set_alpha(i)
+            background([image], [backx], [backy])
+            pygame.display.flip()
             
+        background([image], [backx], [backy])
+        pygame.display.flip()
+        time.sleep(seconds)
+        
+        
+        if count + 1 >= len(factlist):
+            count = 0
+        else:
+            count += 1
+        checkquit()
 
 # -------------------------------------------------------------------------------------------
 if __name__ == '__main__':

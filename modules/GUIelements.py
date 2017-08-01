@@ -248,6 +248,6 @@ if __name__ == '__main__':
         screen.fill(white)
         #obj.get_dragged()
         obj.blit(screen)
-        clock.tick(10)
+        clock.tick(25)
         pg.display.update()
         
