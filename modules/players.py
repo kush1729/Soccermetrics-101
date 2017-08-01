@@ -53,6 +53,17 @@ class Player(object):
               else:
                 self.new_rating = self.year_2_rating - x
 
+def load(iterate = False):
+    from teams import allTeams
+    folder = os.getcwd() + "\\data\\players\\"
+    playerlistfile = open(folder+"players_list.txt", "rb")
+    for pname in playerlistfile:
+        pname = pname.rstrip("\n")
+        obj = Player(pname)
+        allTeams[obj.club].add(obj)
+        if iterate:
+            yield 0
+
 if __name__ == '__main__':
     print "Program to add new players"
     while True:
@@ -73,12 +84,6 @@ if __name__ == '__main__':
         ch = raw_input("Continue? (Y/N): ").upper()
         if ch == "N": break
 elif __name__ != "__main__":
-    from teams import allTeams
-    folder = os.getcwd() + "\\data\\players\\"
-    playerlistfile = open(folder+"players_list.txt", "rb")
-    for pname in playerlistfile:
-        pname = pname.rstrip("\n")
-        obj = Player(pname)
-        allTeams[obj.club].add(obj)
+    pass
 
             
