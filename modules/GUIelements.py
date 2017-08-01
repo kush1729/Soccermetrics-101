@@ -35,6 +35,8 @@ d [5, 6]
 import pygame as pg
 from Colours import *
 
+#---------------------------------------------------------------------------------------
+
 def text_objects(text, colour, size, numreturn = 2):
 ##    font_dict = {'small':smallfont, 'medium':medfont, 'large':largefont, 'smallmed':smallmedfont, 'mediumlarge':mediumlargefont}
     #size is font size as an integer
@@ -54,6 +56,8 @@ def message_to_screen(screen, msg, color, center_loc, size):
     screen.blit(textSurf, textRect)
     return textRect
 
+#-------------------------------------------------------------------------------
+
 class Clickable(object):
     """parent class for any GUI element that takes a mouse click"""
     def __init__(self, x, y, width, height):
@@ -70,6 +74,8 @@ class Clickable(object):
         if clicked and (self.x < cur[0] < self.x + self.wd) and (self.y < cur[1] < self.y + self.ht):
             return True
         return False
+
+#---------------------------------------------------------------------------
 
 class Button(Clickable):
     RETURN_TRUE = 1
@@ -112,6 +118,8 @@ as defined by the name of the constant."""
         flag = super(Button, self).get_click(True)
         if flag:
             return self.action()
+
+#--------------------------------------------------------------------------------------
 
 class Dragable(object):
     '''Object that can be dragged by the mouse.
@@ -214,9 +222,11 @@ steps gives the jumps that the object will make'''
             c = self.colour
         pg.draw.rect(surface, c, (self.x, self.y, self.wd, self.ht))
         if update: pygame.display.update()
+
+#----------------------------------------------------------------------------
             
 class ListBox(object):
-    def __init__(self, x, y, width, height, ind_ht, bkgcolour, *items):
+    def __init__(self, x, y, width, height, items, ind_ht, bkgcolour = white):
         #ind_ht is the individual height of each box in the ListBox
         #the height will auto adjust to ensure that ind_ht divides height
         self.x = x
@@ -234,8 +244,6 @@ class ListBox(object):
             dht = 0
         self.ht = height + dht
         self.numvisible = (self.ht/ind_ht)
-        if len(items) == 1 and (isinstance(items[0], list) or isinstance(itmes[0], tuple)):
-            items = tuple(items[0])
         if len(items) < self.numvisible:
             items += ('',)*(self.numvisible-len(items))
         self.items = items
@@ -310,21 +318,74 @@ class ListBox(object):
             if i != self.pos + self.numvisible - 1:
                 pg.draw.rect(screen, black, (self.x, self.y+(j+1)*self.ind_ht-1, self.wd, 2))
         if update: pg.display.update()
+
+#---------------------------------------------------------------------------------------------------
+
+class ClickListBox(ListBox, Clickable):
+    def __init__(self, x, y, width, height, actionkeys, actionvalues, ind_ht, bkgcolour = white, activecolour = red,
+                 repeat_action = False):
+        self.keys = actionkeys
+        self.actions = actionvalues
+        self.repeat = repeat_action
+        super(ClickListBox, self).__init__(x, y, width, height, self.keys, ind_ht, bkgcolour)
+        self.activeselectcolour = activecolour
+        self.activated = None
         
+    def __is_inside(self, (mx, my)):
+        return (self.x < mx < self.x + self.wd) and (self.y < my < self.y + self.ht)
+    
+    def get_click(self):
+        self.shift()   
+        if super(ClickListBox, self).get_click():
+            cury = pg.mouse.get_pos()[1]
+            self.activated = self.pos + (cury - self.y)//self.ind_ht
+        elif pg.mouse.get_pressed()[0] and not self.__is_inside(pg.mouse.get_pos()):
+            self.activated = None
+        if self.activated != None:
+            i = self.activated
+            if not self.repeat:
+                self.activated = None
+            return self.actions[i]() 
+            
+            
+    def blit(self, surface, update = False):
+        super(ClickListBox, self).blit(surface, False)
+        if self.activated != None:
+            i = self.activated
+            j = i - self.pos
+            pg.draw.rect(surface, self.activeselectcolour, (self.x, self.y + j*self.ind_ht, self.wd, self.ind_ht), 2)
+            text_to_button(surface, self.keys[i], black, self.x, self.y + j*self.ind_ht, self.wd,
+                           self.ind_ht, 1+int(self.ind_ht//2.5))
+
+
+#---------------------------------------------------------------------------------
+#TESTING 
+
+
 if __name__ == '__main__':
+    def f1(): print 1
+    def f2(): print 2
+    def f3(): print 3
+    def f4(): print 4
+    def f5(): print 5
+    def f6(): print 6
+    def f7(): print 7
+    def f8(): print 8
+    def change(): obj.repeat = True
     pg.init()
     screen = pg.display.set_mode((500, 500))
     screen.fill(white)
     clock = pg.time.Clock()
-    obj = ListBox(10, 10, 200, 400, 100, green, ['ITEM %d'%(k) for k in xrange(3)])
-    #s = Dragable(50, 50, 50, 200, colour = red, restrict = 'x',  yinterval = (50, 150),steps = 25)
+    dk = ["item %d"%k for k in xrange(1, 9)] + ["CHANGE"]
+    dv = [f1, f2, f3, f4, f5, f6, f7, f8, change]
+    obj = ClickListBox(10, 10, 200, 400, dk, dv, 100, green)
     while True:
         for e in pg.event.get():
             if e.type == pg.QUIT or (e.type == pg.KEYDOWN and e.key == pg.K_ESCAPE):
                 pg.quit()
                 quit()
         screen.fill(white)
-        obj.shift()
+        obj.get_click()
 ##        s.get_dragged()
 ##        for i in xrange(20):
 ##            y = 10+20*i
