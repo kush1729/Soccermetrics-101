@@ -31,12 +31,14 @@ if __name__ == '__main__':
     gameDisplay = pygame.display.set_mode((display_width, display_height), pygame.FULLSCREEN)
 
 # --------------------------------------------------------------------------------------
-# Images:
+
 
 if __name__ != "__main__":
     folder = getcwd() + "\\modules\\images\\"
 else:
     folder = getcwd() + "\\images\\"
+
+# Images:
 
 "BACKGROUND IMAGES:"
 pitchback = pygame.image.load(folder+"pitch.png")
@@ -71,8 +73,7 @@ def checkquit():
     for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE: 
-                    pygame.quit()
-                    quit()
+                    quit_function()
 
 # Main INTRO Function! 
 def intro(gameDisplay, display_width, display_height):
@@ -290,8 +291,9 @@ def Choose_Option(gameDisplay, display_width, display_height):
     
     
     count = 0
-    seconds = 3
+    seconds = 5
     backx = backy = 0
+    gameDisplay.set_alpha(0)
     while choosing:
         
         image = factlist[count]
@@ -303,12 +305,10 @@ def Choose_Option(gameDisplay, display_width, display_height):
             backy = -(size[1]-display_height)/2
         elif size[1] < display_height:
             backy = (abs(size[1]-display_height))/2
+        else:
+            backy = 0
 
-        image = image.convert()
-        for i in xrange(255, 0, -1):
-            image.set_alpha(i)
-            background([image], [backx], [backy])
-            pygame.display.flip()
+
             
         background([image], [backx], [backy])
         pygame.display.flip()
@@ -320,6 +320,81 @@ def Choose_Option(gameDisplay, display_width, display_height):
         else:
             count += 1
         checkquit()
+
+def quit_function():
+    radius = 5
+    centre = (display_width/2, display_height/2)
+    while radius < max(display_width, display_height):
+        radius += 25
+        pygame.draw.circle(gameDisplay, black, centre, radius)
+        pygame.display.flip()
+        time.sleep(0.02)
+
+    while radius > 155:
+        radius -= 25
+        background([pitchback], [0], [0])
+        pygame.draw.circle(gameDisplay, black, centre, radius)
+        pygame.display.flip()
+        time.sleep(0.02)
+
+    text = "Thank You for Using SoccerMetrics-101!"
+    textsize = 40
+    rect_height = textsize + 30
+    rect_width = textsize
+
+    while rect_width < len(text)*(textsize - 10):
+        pygame.draw.rect(gameDisplay, black,
+                         [display_width/2 - rect_width/2, display_height/2 - rect_height/2, rect_width, rect_height])
+
+        rect_width += 25
+        pygame.display.flip()
+        time.sleep(0.01)
+
+
+    gui.message_to_screen(gameDisplay, text, gold, centre, textsize)
+    pygame.display.flip()
+    time.sleep(2)
+
+
+    r_w_1 = 10
+    r_h_1 = radius*2 + 20
+    r1x = display_width/2 - rect_width/2
+    r1y = display_height/2 - r_h_1/2
+
+    
+    
+    r_w_3 = 10
+    r_h_3 = r_h_1
+    r3x = display_width/2 + rect_width/2
+    r3y = r1y
+
+    background([pitchback], [0], [0])
+
+    while r1x + r_w_1 < r3x:
+        
+
+        r_w_1 += 25
+
+
+        r3x -= 25
+        r_w_3 += 25
+        
+
+
+        pygame.display.update([[r1x, r1y, r_w_1, r_h_1], [r3x, r3y, r_w_3, r_h_3]])
+        time.sleep(0.02)
+
+        
+
+    
+        
+
+
+    
+
+    time.sleep(2)
+    pygame.quit()
+    quit()
 
 # -------------------------------------------------------------------------------------------
 if __name__ == '__main__':
