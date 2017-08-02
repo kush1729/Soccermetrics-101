@@ -93,18 +93,23 @@ as defined by the name of the constant."""
         def tempTrue(): return True
         def tempFalse(): return False
         def tempNone(): return None
+        self.string = False
         if action == Button.RETURN_TRUE:
             action = tempTrue
         elif action == Button.RETURN_FALSE:
             action = tempFalse
         elif action == Button.RETURN_NONE:
             action = tempNone
+        elif isinstance(action, str):
+            self.string = True
         self.action = action
         self.inactive = inactivecolour
         self.active = activecolour
         self.border = border 
         if text == None:
             text = action.__name__.upper()
+            if self.string:
+                text = self.action
         self.text = text
         self.textcolour = textcolour
         self.size = size
@@ -123,6 +128,8 @@ as defined by the name of the constant."""
     def get_click(self):
         flag = super(Button, self).get_click(True)
         if flag:
+            if self.string:
+                return self.action
             return self.action()
 
 #--------------------------------------------------------------------------------------
