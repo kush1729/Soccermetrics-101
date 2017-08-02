@@ -16,6 +16,7 @@ from math import sqrt
 from os import getcwd
 import GUIelements as gui
 import teams
+import players
 
 # ------------------------------------------
 # Control frames per second:----------------
@@ -420,12 +421,12 @@ def Load_Screen(gameDisplay, display_width, display_height):
         try:
             iterator.next()
         except StopIteration:
-##            if currentload == 'team':
-##                currentload = 'player'
-##                p = 0
-##                iterator = players.load()
-##                tot = iterator.next()
-##            else:
+            if currentload == 'team':
+                currentload = 'player'
+                p = 0
+                iterator = players.load()
+                tot = iterator.next()
+            else:
                 break
         timer += 1
         pygame.display.flip()
@@ -439,6 +440,27 @@ def Load_Screen(gameDisplay, display_width, display_height):
                 count += 1
         checkquit(gameDisplay, display_width, display_height)
 
+
+
+    radius = 5
+    centre = (display_width/2, display_height/2)
+    while radius < max(display_height, display_width):
+        
+        pygame.draw.circle(gameDisplay, black, centre, radius)
+        radius += 25
+        pygame.display.flip()
+        time.sleep(0.02)
+
+    background(gameDisplay, [pitchback], [0], [0])
+    while radius > 5:
+        background(gameDisplay, [pitchback], [0], [0])
+
+        pygame.draw.circle(gameDisplay, black, centre, radius)
+        radius -= 25
+        pygame.display.flip()
+
+    
+    
     startBtn = gui.Button(-150+display_width/2, -75+display_height/2, 300, 150, action = gui.Button.RETURN_TRUE,
                        text = "START SIMULATION")
     start = False
@@ -450,9 +472,157 @@ def Load_Screen(gameDisplay, display_width, display_height):
         startBtn.blit(gameDisplay, update = False)
         pygame.display.update()
         clock.tick(20)
+    else:
+        
+        radius = 5
+        centre = (display_width/2, display_height/2)
+        while radius < max(display_height, display_width):
+            
+            pygame.draw.circle(gameDisplay, black, centre, radius)
+            radius += 25
+            pygame.display.flip()
+            time.sleep(0.02)
 
+
+        while radius > 5:
+            background(gameDisplay, [centrecircle], [0], [0])
+
+            pygame.draw.circle(gameDisplay, black, centre, radius)
+            radius -= 25
+            pygame.display.flip()
+
+
+def Menu1(gameDisplay, display_width, display_height, listofteams):
+    background(gameDisplay, [centrecircle], [0], [0])
+
+    recty =  100
+    rectwidth = display_width/2 - 100
+    rectheight = display_height - recty - 50
+    rectx = (display_width - rectwidth)/2
+
+    ry = recty - 50
+    while ry < rectheight + 50:
+        pygame.draw.rect(gameDisplay, black, [rectx, recty, rectwidth, ry])
+        pygame.display.flip()
+        time.sleep(0.01)
+        ry += 25
+
+    a = [gui.ClickListBox.RETURN_NAME for _ in xrange(len(listofteams))]    
+    clickb = gui.ClickListBox(rectx, recty, rectwidth, rectheight, listofteams, a, rectheight/10,
+                              bkgcolour = white, repeat_action = False)
+    while True:
+        checkquit(gameDisplay, display_width, display_height)
+        c = clickb.get_click()
+        background(gameDisplay, [centrecircle], [0], [0])
+        gui.message_to_screen(gameDisplay, "SIMULATED LEAGUE STANDINGS", yellow, (display_width/2, 50), 40)
+        clickb.blit(gameDisplay)
+        pygame.display.flip()
+        time.sleep(0.01)
+        if c != None:
+            #print 'nothing till now'
+            plist = [p.name for p in teams.allTeams[c]]
+            #MenuPlayerList(gameDisplay, display_width, display_height, plist, c)
+            Menu2(gameDisplay, display_width, display_height, c)
+            c = None
+        
+            
+def MenuPlayerList(gameDisplay, display_width, display_height, plist, teamname):
+    background(gameDisplay, [centrecircle], [0], [0])
+
+    recty =  100
+    rectwidth = display_width/2 - 100
+    rectheight = display_height - recty - 50
+    rectx = (display_width - rectwidth)/2 
+
+    ry = recty - 50
+    while ry < rectheight + 50:
+        pygame.draw.rect(gameDisplay, black, [rectx, recty, rectwidth, ry])
+        pygame.display.flip()
+        time.sleep(0.01)
+        ry += 25
+
+    backbtn = gui.Button(display_width - 175, display_height/2, 150, 100, text = 'BACK')
+    listb = gui.ListBox(rectx, recty, rectwidth, rectheight, plist, rectheight/10)
+
+    while True:
+        checkquit(gameDisplay, display_width, display_height)
+        c = backbtn.get_click()
+        listb.shift()
+        background(gameDisplay, [centrecircle], [0], [0])
+        gui.message_to_screen(gameDisplay, str(teamname).upper(), yellow, (display_width/2, recty - 50), 40)
+        listb.blit(gameDisplay)
+        backbtn.blit(gameDisplay)
+        pygame.display.update()
+        time.sleep(0.01)
+        if c != None:
+            return
+    
+def Menu2(gameDisplay, display_width, display_height, teamname):
+    background(gameDisplay, [centrecircle], [0], [0])
+    #teamname = teamname.replace(" ", "_")
+    recty =  150
+    rectwidth = display_width/2 - 100
+    ind_ht = 80
+    rectheight = 4*ind_ht
+    rectx = (display_width - rectwidth)/2 
+
+    ry = recty - 50
+    while ry < rectheight + 50:
+        pygame.draw.rect(gameDisplay, black, [rectx, recty, rectwidth, ry])
+        pygame.display.flip()
+        time.sleep(0.01)
+        ry += 25
+
+    backbtn = gui.Button(display_width - 175, display_height/2, 150, 100, text = 'BACK')
+    listb = gui.ClickListBox(rectx, recty, rectwidth, rectheight, ["KEEPERS", "DEFENDERS", "MIDFIELDERS", "FORWARDS"],
+                             [1, 1, 1, 1], ind_ht)
+    while True:
+        checkquit(gameDisplay, display_width, display_height)
+        e = backbtn.get_click()
+        c = listb.get_click()
+        background(gameDisplay, [centrecircle], [0], [0])
+        gui.message_to_screen(gameDisplay, teamname.upper().replace("_", " "), yellow, (display_width/2, recty - 100), 40)
+        listb.blit(gameDisplay)
+        backbtn.blit(gameDisplay)
+        pygame.display.update()
+        time.sleep(0.01)
+        if e != None:
+            return
+        if c != None:
+            MenuSuggestions(gameDisplay, display_width, display_height, c, teamname)
+            c = None
+
+def MenuSuggestions(gameDisplay, display_width, display_height, position, teamname): #i = 0, keeper; i = 1, defender etc.
+    d = {"KEEPERS":0, "DEFENDERS":1, "MIDFIELDERS":2, "FORWARDS":3}
+    i = d[position]
+    
+    heading = teamname.upper().replace("_", " ") + "- " + position + ":"
+    l = teams.allTeams[teamname].sug_list[i]
+    if len(l) == 0:
+        flag = True
+        backbtn = gui.Button(display_width/2 - 75, 100+display_height/2, 150, 100, text = 'BACK')
+    else:
+        flag = False
+        listb = gui.ListBox(50, 100, display_width - 200, display_height - 150, l, 75,bkgcolour = lightgrey)
+        backbtn = gui.Button(display_width - 100, display_height/2 - 75, 60, 150, text = 'BACK')
+    while True:
+        checkquit(gameDisplay, display_width, display_height)
+        e = backbtn.get_click()
+        if e != None:
+            return
+        gameDisplay.fill(white)
+        backbtn.blit(gameDisplay)
+        gui.message_to_screen(gameDisplay, heading, black, (display_width/2, 50), 30)
+        if flag:
+            gui.message_to_screen(gameDisplay, "NO SUGGESTIONS", black, (display_width/2, 120), 25)
+        else:
+            listb.shift()
+            listb.blit(gameDisplay)
+        pygame.display.update()
+        
+    
 
 # -------------------------------------------------------------------------------------------
 if __name__ == '__main__':
     #intro(gameDisplay, display_width, display_height)
-    quit_function(gameDisplay, display_width, display_height)
+    Load_Screen(gameDisplay, display_width, display_height)

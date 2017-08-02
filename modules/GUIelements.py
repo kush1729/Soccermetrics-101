@@ -335,6 +335,7 @@ class ListBox(object):
 #---------------------------------------------------------------------------------------------------
 
 class ClickListBox(ListBox, Clickable):
+    RETURN_NAME = 1
     def __init__(self, x, y, width, height, actionkeys, actionvalues, ind_ht, bkgcolour = white, activecolour = red,
                  repeat_action = False):
         self.keys = actionkeys
@@ -358,18 +359,26 @@ class ClickListBox(ListBox, Clickable):
             i = self.activated
             if not self.repeat:
                 self.activated = None
-            return self.actions[i]() 
+            if self.actions[i] == ClickListBox.RETURN_NAME:
+                return self.keys[i]
+            else:
+                return self.actions[i]() 
             
             
     def blit(self, surface, update = False):
         super(ClickListBox, self).blit(surface, False)
+        cur = pg.mouse.get_pos()
         if self.activated != None:
             i = self.activated
             j = i - self.pos
             pg.draw.rect(surface, self.activeselectcolour, (self.x, self.y + j*self.ind_ht, self.wd, self.ind_ht), 2)
             text_to_button(surface, self.keys[i], black, self.x, self.y + j*self.ind_ht, self.wd,
                            self.ind_ht, 1+int(self.ind_ht//2.5))
-
+        elif self.__is_inside(cur):
+            cury = cur[1]
+            k = self.pos + (cury - self.y)//self.ind_ht
+            j = k - self.pos
+            pg.draw.rect(surface, self.activeselectcolour, (self.x, self.y + j*self.ind_ht, self.wd, self.ind_ht), 2)
 
 #---------------------------------------------------------------------------------
 #TESTING 

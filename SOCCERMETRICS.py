@@ -13,11 +13,14 @@ import teams
 import animations
 import pygame
 
+import GUIelements as gui
+
 def Quit(gameDisplay, display_width, display_height):
     teams.close()
     pygame.quit()
     animations.quit_function(gameDisplay, display_width, display_height)
     quit()
+
 
 pygame.init()
 display_width = 1000
@@ -26,6 +29,13 @@ gameDisplay = pygame.display.set_mode((display_width, display_height),pygame.FUL
 
 animations.intro(gameDisplay, display_width, display_height)
 animations.Load_Screen(gameDisplay, display_width, display_height)
+teams.table = table = teams.Simulate(teams.allTeams)
 
+for team in teams.allTeams.values():
+    for player in team.player_list:
+        player.rater()
+players.suggester()
+
+animations.Menu1(gameDisplay, display_width, display_height, [t.name for t in table])
 #print teams.allTeams
 Quit(gameDisplay, display_width, display_height)
