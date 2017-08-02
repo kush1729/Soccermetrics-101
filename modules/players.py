@@ -57,32 +57,16 @@ def load(iterate = False):
     from teams import allTeams
     folder = os.getcwd() + "\\data\\players\\"
     playerlistfile = open(folder+"players_list.txt", "rb")
+    yield len(playerlistfile.readlines())
+    playerlistfile.seek(0)
     for pname in playerlistfile:
-        pname = pname.rstrip("\n")
+        pname = pname.rstrip("\r\n")
         obj = Player(pname)
-        allTeams[obj.club].add(obj)
-        if iterate:
-            yield 0
+        allTeams[obj.new_club].add(obj)
+        yield 0
 
 if __name__ == '__main__':
-    print "Program to add new players"
-    while True:
-        folder = os.getcwd().rstrip("\\modules") + "\\data\\players\\"
-        name = raw_input("Enter New Player Name: ")
-        with open(folder+"players_list.txt", "ab") as plf:
-            plf.write(name+"\n")
-        with open(folder+name.replace(" ", "_")+".pydb", "wb") as f:
-            pk.dump(raw_input("Enter Club Name: "), f)
-            i = raw_input("Enter New Club Name if any (if not, just press enter): ")
-            if i == "":
-                i = None
-            pk.dump(i, f)
-            pk.dump(raw_input("Enter Position: "), f)
-            pk.dump(float(raw_input("Enter Year 1 Rating: ")), f)
-            pk.dump(float(raw_input("Enter Year 2 Rating: ")), f)
-            pk.dump(float(raw_input("Enter Market Value: ")), f)
-        ch = raw_input("Continue? (Y/N): ").upper()
-        if ch == "N": break
+    pass
 elif __name__ != "__main__":
     pass
 
