@@ -32,6 +32,7 @@ The Team Object will store all relevant data of a particular team."""
                 else:
                     return cmp(self.standing, other.standing)
             return cmp(self.points, other.points)
+        return 0
     def __hash__(self):
         """name of the team will be used for the hash"""
         return hash(self.name)
@@ -114,7 +115,7 @@ The Team Object will store all relevant data of a particular team."""
                 self.goaldiff += 3
                 awayteam.goaldiff -= 3
 
-def get_Fixtures():
+def get_Fixtures(allTeams):
     l = len(allTeams)
     keys = tuple(allTeams.keys())
     hl = list(keys)
@@ -126,13 +127,13 @@ def get_Fixtures():
             if i != j:
                 yield (allTeams[hl[i]], allTeams[al[j]])
 
-def Simulate():
+def Simulate(allTeams):
     curStanding = allTeams.values()
-    curStanding.sort(reverse = True)
-    for home, away in get_Fixtures():
+    curStanding.sort()
+    for home, away in get_Fixtures(allTeams):
         home.homematch(away)
-    curStanding.sort(reverse = True)
-    return curStanding
+    curStanding.sort()
+    return curStanding[::-1]
             
 def close(iterate = False):
     for team in allTeams:
@@ -140,7 +141,7 @@ def close(iterate = False):
         if iterate:
             yield 0
     #quit()
-
+table = []
 def load(iterate = False, main = True):
     global allTeams
     if main:
@@ -164,5 +165,5 @@ elif __name__ == "__main__":
     for _ in load(main = False):
         pass
     print 'name, pts, goaldiff, elo'
-    for t in Simulate():
-        print t, t.points, t.goaldiff, t.elo
+    table = Simulate(allTeams)
+    print table
