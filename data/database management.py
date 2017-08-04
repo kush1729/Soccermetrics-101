@@ -1,4 +1,11 @@
 #comment
+"""Southampton FC
+None
+D
+6.92
+6.81
+2.55"""
+
 import os
 import pickle as pk
 import sys
@@ -22,15 +29,18 @@ def ReadFile(name, type = "p"): #p == player, t == team
     try:
         f = open(filename, "rb")
     except IOError:
-        print "Non Existant File:", filename
+        try:
+            f = open(filename.rstrip(".pydb") + "_bkup.pydb", "rb")
+        except IOError:
+            print "Non Existant File:", filename
+            return
+    if type == "p":
+        attributes = playerattr
     else:
-        if type == "p":
-            attributes = playerattr
-        else:
-            attributes = teamattr
-        print "Name:", name
-        for a in attributes:
-            print a+":", pk.load(f)
+        attributes = teamattr
+    print "Name:", name
+    for a in attributes:
+        print a+":", pk.load(f)
 
 def EditFile(name, type = "p"):
     filename = getFileName(name, (playerfolder if type == "p" else teamfolder))
