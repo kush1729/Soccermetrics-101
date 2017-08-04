@@ -1,7 +1,7 @@
 import pickle as pk
 from os import getcwd
 
-datafolder = getcwd().rstrip("modules") + "data"
+datafolder = getcwd().rstrip("modules").rstrip("data") + "data"
 
 def backupplayers():
     folder = datafolder + "\\players\\"
@@ -17,7 +17,7 @@ def backupplayers():
                 f.close()
         with open(folder+pname.replace(" ", "_")+"_bkup.pydb", "w") as f:
             for i in l:
-                f.write(str(i) + "\n")
+                pk.dump(i, f)
     playerslist.close()
 
 def backupteams():
