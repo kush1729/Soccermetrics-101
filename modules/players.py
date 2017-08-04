@@ -20,7 +20,11 @@ class Player(object):
         return self.name
     def get_info(self):
         folder = os.getcwd() + "\\data\\players\\"
-        filename = folder + self.name.replace(" ", "_") + ".pydb"
+        try:
+            filename = folder + self.name.replace(" ", "_") + ".pydb"
+        except:
+            filename = folder + self.name.replace(" ", "_") + "_bkup.pydb"
+            bu.fixCorrupt(self.name, "p")
         with open(filename, "rb") as f:
             self.club = pk.load(f)
             self.new_club = pk.load(f)

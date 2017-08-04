@@ -1,6 +1,7 @@
 import os
 import pickle as pk
 import random
+import back_up as bu
 
 """Class Definition is incomplete.
 Methods to calculate ELO, financial status etc are required."""
@@ -48,14 +49,16 @@ The Team Object will store all relevant data of a particular team."""
     def add(self, player):
         self.player_list.append(player)
     def get_info(self):
-        if __name__ == '__main__':
-            folder = os.getcwd().rstrip("\\modules") + "\\data\\teams\\"
-        else:
-            folder = os.getcwd() + "\\data\\teams\\"
-        with open(folder + self.name.replace(" ", "_") + ".pydb", "rb") as f:
+        folder = os.getcwd() + "\\data\\teams\\"
+        try:
+            filename = folder + self.name.replace(" ", "_") + ".pydb"
+        except:
+            filename = folder + self.name.replace(" ", "_") + "_bkup.pydb"
+            bu.fixCorrupt(self.name, "t")
+        with open(filename, "rb") as f:
             self.finances = pk.load(f)
             self.standing = pk.load(f)
-        self.player_list
+        #self.player_list = 
     def send_info(self):
         folder = os.getcwd() + "\\data\\teams\\"
         with open(folder + self.name.replace(" ", "_") + ".pydb", "wb") as f:
