@@ -14,9 +14,12 @@ import animations
 import pygame
 
 import GUIelements as gui
+import back_up as bu
 
 def Quit(gameDisplay, display_width, display_height):
     teams.close()
+    bu.backupplayers()
+    bu.backupteams()
     pygame.quit()
     animations.quit_function(gameDisplay, display_width, display_height)
     quit()
