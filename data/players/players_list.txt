@@ -55,7 +55,7 @@ Raheem Sterling
 John Stones
 Fabian Delph
 Fernando
-Kelechi Iheanacha
+Kelechi Iheanacho
 Claudio Bravo
 Phillipe Coutinho
 Roberto Firmino
@@ -208,3 +208,15 @@ Nacer Chadli
 James McClean
 Hal Robson-Kanu
 Salomon Rondon
+Kasper Schmeichel
+Harry Maguire
+Wilfred Ndidi
+Christian Fuchs
+Danny Simpson
+Daniel Amartey
+Wes Morgan
+Marc Albrighton
+Jamie Vardy
+Riyad Mahrez
+Shinji Okazaki
+Demarai Gray

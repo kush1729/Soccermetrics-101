@@ -176,9 +176,16 @@ def suggester():
         teams.allTeams['West Bromwich Albion FC'].pl_pos = west_pos
         
 
-    group_1 = [teams.allTeams['Chelsea FC'], teams.allTeams['Manchester City FC'], teams.allTeams['Liverpool FC'], teams.allTeams['Arsenal FC'], teams.allTeams['Manchester United FC']]
+    group_1 = [teams.allTeams['Chelsea FC'], teams.allTeams['Manchester City FC'],
+               teams.allTeams['Liverpool FC'], teams.allTeams['Arsenal FC'],
+               teams.allTeams['Manchester United FC']]
     
-    group_2 = [teams.allTeams['Tottenham Hotspur FC'], teams.allTeams['Everton FC'], teams.allTeams['Southampton FC'], teams.allTeams['Bournemouth'], teams.allTeams['West Bromwich Albion FC']]
+    group_2 = [teams.allTeams['Tottenham Hotspur FC'], teams.allTeams['Everton FC']]
+    group_3 = [teams.allTeams['Southampton FC'], teams.allTeams['Bournemouth']]
+    group_4 = [teams.allTeams['West Bromwich Albion FC']]
+
+
+    grouplist = [group_1, group_2, group_3, group_4]
 
     chel_sug = [[],[],[],[]]
     tot_sug = [[],[],[],[]]
@@ -205,28 +212,17 @@ def suggester():
 
     n = 0
     while n < 4: #accessing positions
-        for i in group_1: #teamlists of 1
-            for p in i.pl_pos[n]:
-                for j in group_1:
-                    if i != j:
-                        for k in j.pl_pos[n]:
-                            
-                            if k.new_rating > p.new_rating:
-                                i.sug_list[n].append(str(k.name) + ' for ' + str(p.name))
-                for j in group_2:
-                    if i != j:
-                        for k in j.pl_pos[n]:
-                            
-                            if k.new_rating > p.new_rating:
-                                i.sug_list[n].append(str(k.name) + ' for ' + str(p.name))
-        for i in group_2: #teamlists of 1
-            for p in i.pl_pos[n]:
-                for j in group_2:
-                    if i != j:
-                        for k in j.pl_pos[n]:
-                            
-                            if k.new_rating > p.new_rating:
-                                i.sug_list[n].append(str(k.name) + ' for ' + str(p.name))
+        for group in range(len(grouplist)):
+            for team in grouplist[group]: #teamlists of 1
+                for person in team.pl_pos[n]:
+                    for market_group in range(group, len(grouplist)):
+                        
+                        for market_team in grouplist[market_group]:
+                            if team != market_team:
+                                for market_person in market_team.pl_pos[n]:
+                                    
+                                    if market_person.new_rating > person.new_rating:
+                                        team.sug_list[n].append(str(market_person.name) + ' for ' + str(person.name))
         n += 1
 
 def load(iterate = False):

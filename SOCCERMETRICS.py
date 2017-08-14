@@ -30,7 +30,7 @@ display_width = 1000
 display_height = 750
 gameDisplay = pygame.display.set_mode((display_width, display_height),pygame.FULLSCREEN)
 
-animations.intro(gameDisplay, display_width, display_height)
+##animations.intro(gameDisplay, display_width, display_height)
 animations.Load_Screen(gameDisplay, display_width, display_height)
 teams.table = table = teams.Simulate(teams.allTeams)
 
