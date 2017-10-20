@@ -61,36 +61,36 @@ class Player(object):
         n = 1
         self.pos = 0
         for i in teams.table:
-            print "I", i, self.new_club
-            if self.new_club == i:
+            #print "I", i, self.new_club
+            if self.new_club == i.name:
                 self.pos = n
                 n += 1
-            print "N", n
+            ##print "N", n
 
                 
         if self.pos == 1:
             self.new_rating = self.year_2_rating + 0.1
-            print "1", self.new_club
+            ##print "1", self.new_club
         elif self.pos == 2 or self.pos == 3:
             self.new_rating = self.year_2_rating + 0.07
-            print "2, 3", self.new_club
+            ##print "2, 3", self.new_club
         elif self.pos == 4 or self.pos == 5:
-            print "4, 5", self.new_club
+            ##print "4, 5", self.new_club
             self.new_rating = self.year_2_rating + 0.04
         elif self.pos == 6 or self.pos == 7:
-            print "6, 7", self.new_club
+            #print "6, 7", self.new_club
             self.new_rating = self.year_2_rating
         elif self.pos == 8 or self.pos == 9:
-            print "8, 9", self.new_club
+            #print "8, 9", self.new_club
             self.new_rating = self.year_2_rating - 0.06
         elif self.pos == 10:
-            print "10", self.new_club
+            #print "10", self.new_club
             self.new_rating = self.year_2_rating - 0.1
         elif self.pos == 12:
-            print "12", self.new_club
+            #print "12", self.new_club
             self.new_rating = self.year_2_rating - 0.15
         else:
-            print self.new_club, self.pos, "HERE!"
+            #print self.new_club, self.pos, "HERE!"
             self.new_rating = self.year_2_rating - 0.15
 
         self.impr = self.year_2_rating - self.year_1_rating
@@ -102,7 +102,7 @@ class Player(object):
         if self.new_club[-2:] != "FC" and self.new_club != "Bournemouth":
             self.new_club += " FC"
 
-        print "Final!", self.new_club
+        #print "Final!", self.new_club
         self.new_rating += (self.impr*((impr_dict[self.new_club])/10))
         
 def suggester():
@@ -119,13 +119,13 @@ def suggester():
 
     pos_list = [[], [], [], []]
     for team_name in teams.allTeams:
-        for players in teams.allTeams[team_name].player_list:
-            if players.position.lower() == 'g': pos_list[0].append(i)
-            if players.position.lower() == 'd': pos_list[1].append(i)
-            if players.position.lower() == 'm': pos_list[2].append(i)
-            if players.position.lower() == 'f': pos_list[3].append(i)
+        for player in teams.allTeams[team_name].player_list:
+            if player.position.lower() == 'g': pos_list[0].append(player)
+            if player.position.lower() == 'd': pos_list[1].append(player)
+            if player.position.lower() == 'm': pos_list[2].append(player)
+            if player.position.lower() == 'f': pos_list[3].append(player)
 
-            teams.allTeams[team_name].pl_pos = chel_pos
+            teams.allTeams[team_name].pl_pos = pos_list
 
             
 ##    for i in teams.allTeams['Chelsea FC'].player_list:

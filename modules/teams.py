@@ -25,6 +25,13 @@ The Team Object will store all relevant data of a particular team."""
         return self.name
     def __del__(self):
         pass
+    def __eq__(self, other):
+        if isinstance(other, str):
+            return self.name == other
+        elif isinstance(other, Club):
+            return self.name == other.name
+        else:
+            return False
     def __cmp__(self, other):
         if isinstance(other, Club):
             if self.points == other.points:
