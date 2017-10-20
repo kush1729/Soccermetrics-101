@@ -26,12 +26,12 @@ def Quit(gameDisplay, display_width, display_height):
     pygame.quit()
     quit()
 
-try:
-    pygame.init()
-    display_width = 1000
-    display_height = 750
-    gameDisplay = pygame.display.set_mode((display_width, display_height),pygame.FULLSCREEN)
+pygame.init()
+display_width = 1000
+display_height = 750
+gameDisplay = pygame.display.set_mode((display_width, display_height),pygame.FULLSCREEN)
 
+try:
     ##animations.intro(gameDisplay, display_width, display_height)
     animations.Load_Screen(gameDisplay, display_width, display_height)
     teams.table = table = teams.Simulate(teams.allTeams)
@@ -46,4 +46,5 @@ try:
     Quit(gameDisplay, display_width, display_height)
 except Exception as e:
     traceback.print_exc()
-    Quit()
+    pygame.quit()
+    quit()

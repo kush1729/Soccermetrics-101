@@ -494,7 +494,6 @@ def Load_Screen(gameDisplay, display_width, display_height):
 
 def Menu1(gameDisplay, display_width, display_height, listofteams):
     background(gameDisplay, [centrecircle], [0], [0])
-
     recty =  100
     rectwidth = display_width/2 - 100
     rectheight = display_height - recty - 50
@@ -528,7 +527,6 @@ def Menu1(gameDisplay, display_width, display_height, listofteams):
             
 def MenuPlayerList(gameDisplay, display_width, display_height, plist, teamname):
     background(gameDisplay, [centrecircle], [0], [0])
-
     recty =  100
     rectwidth = display_width/2 - 100
     rectheight = display_height - recty - 50
@@ -565,7 +563,6 @@ def Menu2(gameDisplay, display_width, display_height, teamname):
     ind_ht = 80
     rectheight = 4*ind_ht
     rectx = (display_width - rectwidth)/2 
-
     ry = recty - 50
     while ry < rectheight + 50:
         pygame.draw.rect(gameDisplay, black, [rectx, recty, rectwidth, ry])
@@ -595,7 +592,6 @@ def Menu2(gameDisplay, display_width, display_height, teamname):
 def MenuSuggestions(gameDisplay, display_width, display_height, position, teamname): #i = 0, keeper; i = 1, defender etc.
     d = {"KEEPERS":0, "DEFENDERS":1, "MIDFIELDERS":2, "FORWARDS":3}
     i = d[position]
-    
     heading = teamname.upper().replace("_", " ") + "- " + position + ":"
     l = teams.allTeams[teamname].sug_list[i]
     if len(l) == 0:
@@ -619,6 +615,8 @@ def MenuSuggestions(gameDisplay, display_width, display_height, position, teamna
             listb.shift()
             listb.blit(gameDisplay)
         pygame.display.update()
+        time.sleep(0.1)
+        return
         
     
 
