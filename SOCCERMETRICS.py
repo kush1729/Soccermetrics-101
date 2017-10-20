@@ -16,29 +16,34 @@ import pygame
 import GUIelements as gui
 import back_up as bu
 
+import traceback
+
 def Quit(gameDisplay, display_width, display_height):
     teams.close()
     bu.backupplayers()
     bu.backupteams()
-    pygame.quit()
     animations.quit_function(gameDisplay, display_width, display_height)
+    pygame.quit()
     quit()
 
+try:
+    pygame.init()
+    display_width = 1000
+    display_height = 750
+    gameDisplay = pygame.display.set_mode((display_width, display_height),pygame.FULLSCREEN)
 
-pygame.init()
-display_width = 1000
-display_height = 750
-gameDisplay = pygame.display.set_mode((display_width, display_height),pygame.FULLSCREEN)
+    ##animations.intro(gameDisplay, display_width, display_height)
+    animations.Load_Screen(gameDisplay, display_width, display_height)
+    teams.table = table = teams.Simulate(teams.allTeams)
 
-##animations.intro(gameDisplay, display_width, display_height)
-animations.Load_Screen(gameDisplay, display_width, display_height)
-teams.table = table = teams.Simulate(teams.allTeams)
+    for team in teams.allTeams.values():
+        for player in team.player_list:
+            player.rater()
+    players.suggester()
 
-for team in teams.allTeams.values():
-    for player in team.player_list:
-        player.rater()
-players.suggester()
-
-animations.Menu1(gameDisplay, display_width, display_height, [t.name for t in table])
-#print teams.allTeams
-Quit(gameDisplay, display_width, display_height)
+    animations.Menu1(gameDisplay, display_width, display_height, [t.name for t in table])
+    #print teams.allTeams
+    Quit(gameDisplay, display_width, display_height)
+except Exception as e:
+    traceback.print_exc()
+    Quit()
