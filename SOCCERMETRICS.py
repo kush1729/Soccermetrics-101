@@ -10,6 +10,8 @@ sys.path.append(folder)
 
 import players
 import teams
+import algorithms
+
 import animations
 import pygame
 
@@ -32,14 +34,14 @@ display_height = 750
 gameDisplay = pygame.display.set_mode((display_width, display_height),pygame.FULLSCREEN)
 
 try:
-    ##animations.intro(gameDisplay, display_width, display_height)
+    animations.intro(gameDisplay, display_width, display_height)
     animations.Load_Screen(gameDisplay, display_width, display_height)
     teams.table = table = teams.Simulate(teams.allTeams)
 
     for team in teams.allTeams.values():
         for player in team.player_list:
             player.rater()
-    players.suggester()
+    algorithms.suggester()
 
     animations.Menu1(gameDisplay, display_width, display_height, [t.name for t in table])
     #print teams.allTeams
