@@ -1,5 +1,6 @@
 import teams
 import players
+import random
 
 def suggester():
 ##    chel_pos = [[],[],[],[]]
@@ -13,8 +14,9 @@ def suggester():
 ##    bou_pos = [[],[],[],[]]
 ##    west_pos = [[],[],[],[]]
 
-    pos_list = [[], [], [], []]
+    #pos_list = [[], [], [], []]
     for team_name in teams.allTeams:
+        pos_list = [[], [], [], []]
         for player in teams.allTeams[team_name].player_list:
             if player.position.lower() == 'g': pos_list[0].append(player)
             if player.position.lower() == 'd': pos_list[1].append(player)
@@ -160,3 +162,31 @@ def suggester():
         for i in xrange(4):
             print "Length of sug_list[%d] for team %s is %d"%(i, tname, len(teams.allTeams[tname].sug_list[i]))
         print
+
+
+def get_Fixtures(allTeams):
+    l = len(allTeams)
+    keys = tuple(allTeams.keys())
+    hl = list(keys)
+    al = list(keys)
+    random.shuffle(hl)
+    random.shuffle(al)
+    for i in xrange(l):
+        for j in xrange(l):
+            if i != j:
+                yield (allTeams[hl[i]], allTeams[al[j]])
+
+def Simulate(allTeams):
+    results = []
+    curStanding = allTeams.values()
+    curStanding.sort()
+    for home, away in get_Fixtures(allTeams):
+        gd = home.homematch(away)
+        loss_score = random.randint(0, 4)#int(random.normalvariate(0, 2, 0.5))
+        s = "{:^s} %d - {:^s} %d".format(home.name, away.name)
+        if gd < 0:
+            results.append(s%(loss_score, loss_score + abs(gd)))
+        else:
+            results.append(s%(loss_score + gd, loss_score))
+    curStanding.sort()
+    return curStanding[::-1], results

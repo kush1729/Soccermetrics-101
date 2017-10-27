@@ -34,16 +34,16 @@ display_height = 750
 gameDisplay = pygame.display.set_mode((display_width, display_height),pygame.FULLSCREEN)
 
 try:
-    animations.intro(gameDisplay, display_width, display_height)
+    #animations.intro(gameDisplay, display_width, display_height)
     animations.Load_Screen(gameDisplay, display_width, display_height)
-    teams.table = table = teams.Simulate(teams.allTeams)
-
+    table, results = algorithms.Simulate(teams.allTeams)
+    teams.table = table
     for team in teams.allTeams.values():
         for player in team.player_list:
             player.rater()
     algorithms.suggester()
 
-    animations.Menu1(gameDisplay, display_width, display_height, [t.name for t in table])
+    animations.Menu1(gameDisplay, display_width, display_height, [t.name for t in table], results)
     #print teams.allTeams
     Quit(gameDisplay, display_width, display_height)
 except Exception as e:
