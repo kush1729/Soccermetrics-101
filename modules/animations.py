@@ -175,22 +175,22 @@ def checkquit(gameDisplay, display_width, display_height, quitter = quit_functio
 
 # Main INTRO Function! 
 def intro(gameDisplay, display_width, display_height):
-
-    start = False
-    gameDisplay.fill(white)
-    gui.message_to_screen(gameDisplay, "Press Any Key Other Than Escape To Start", black, (display_width/2, display_height/2), 40)
-    gui.message_to_screen(gameDisplay, "Press Escape to Quit", black, (display_width/2, display_height/2 + 50), 30)
-    pygame.display.update()
-    while not start:
-        
-        for event in pygame.event.get():
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    pygame.quit()
-                    quit()
-                else:
-                    start = True
-                    break
+    time.sleep(0.5)
+##    start = False
+##    gameDisplay.fill(white)
+##    gui.message_to_screen(gameDisplay, "Press Any Key Other Than Escape To Start", black, (display_width/2, display_height/2), 40)
+##    gui.message_to_screen(gameDisplay, "Press Escape to Quit", black, (display_width/2, display_height/2 + 50), 30)
+##    pygame.display.update()
+##    while not start:
+##        
+##        for event in pygame.event.get():
+##            if event.type == pygame.KEYDOWN:
+##                if event.key == pygame.K_ESCAPE:
+##                    pygame.quit()
+##                    quit()
+##                else:
+##                    start = True
+##                    break
     gameDisplay.fill(white)
     pygame.display.update()
     gameon = True
