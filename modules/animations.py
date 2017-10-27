@@ -492,7 +492,7 @@ def Load_Screen(gameDisplay, display_width, display_height):
             pygame.display.flip()
 
 
-def Menu1(gameDisplay, display_width, display_height, listofteams):
+def Menu1(gameDisplay, display_width, display_height, listofteams, results):
     background(gameDisplay, [centrecircle], [0], [0])
     recty =  100
     rectwidth = display_width/2 - 100
@@ -507,14 +507,17 @@ def Menu1(gameDisplay, display_width, display_height, listofteams):
         ry += 25
 
     a = [gui.ClickListBox.RETURN_NAME for _ in xrange(len(listofteams))]    
-    clickb = gui.ClickListBox(rectx, recty, rectwidth, rectheight, listofteams, a, rectheight/10,
+    clickb = gui.ClickListBox(10, recty, rectwidth, rectheight, listofteams, a, rectheight/10,
                               bkgcolour = white, repeat_action = False)
+    res_list = gui.ListBox(display_width/2 + 10, recty, rectwidth + 100, rectheight, results, rectheight/10)
     while True:
         checkquit(gameDisplay, display_width, display_height)
         c = clickb.get_click()
+        res_list.shift()
         background(gameDisplay, [centrecircle], [0], [0])
         gui.message_to_screen(gameDisplay, "SIMULATED LEAGUE STANDINGS", yellow, (display_width/2, 50), 40)
         clickb.blit(gameDisplay)
+        res_list.blit(gameDisplay)
         pygame.display.flip()
         time.sleep(0.01)
         if c != None:
@@ -616,7 +619,7 @@ def MenuSuggestions(gameDisplay, display_width, display_height, position, teamna
             listb.blit(gameDisplay)
         pygame.display.update()
         time.sleep(0.1)
-        return
+        
         
     
 

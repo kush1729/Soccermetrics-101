@@ -85,6 +85,7 @@ The Team Object will store all relevant data of a particular team."""
             awayteam.points += 1
             self.elo += 10
             awayteam.elo += 10
+            return 0
         elif 500 >= abs(awayelo - self.elo) > 150:
             if awayelo > self.elo: #away win
                 awayteam.elo += 75
@@ -92,12 +93,14 @@ The Team Object will store all relevant data of a particular team."""
                 awayteam.points += 3
                 awayteam.goaldiff += 1
                 self.goaldiff -= 1
+                return -1 #negative means away win
             else:
                 self.elo += 75
                 awayteam.elo -= 30
                 self.points += 3
                 self.goaldiff += 1
                 awayteam.goaldiff -= 1
+                return 1
         elif 850 >= abs(awayelo - self.elo) > 500:
             if awayelo > self.elo: #away win
                 awayteam.elo += 50
@@ -105,12 +108,14 @@ The Team Object will store all relevant data of a particular team."""
                 awayteam.points += 3
                 awayteam.goaldiff += 2
                 self.goaldiff -= 2
+                return -2
             else:
                 self.elo += 50
                 awayteam.elo -= 20
                 self.points += 3
                 self.goaldiff += 2
                 awayteam.goaldiff -= 2
+                return 2
         else:
             if awayelo > self.elo: #away win
                 awayteam.elo += 25
@@ -118,32 +123,15 @@ The Team Object will store all relevant data of a particular team."""
                 awayteam.points += 3
                 awayteam.goaldiff += 3
                 self.goaldiff -= 3
+                return -3
             else:
                 self.elo += 25
                 awayteam.elo -= 10
                 self.points += 3
                 self.goaldiff += 3
                 awayteam.goaldiff -= 3
+                return 3
 
-def get_Fixtures(allTeams):
-    l = len(allTeams)
-    keys = tuple(allTeams.keys())
-    hl = list(keys)
-    al = list(keys)
-    random.shuffle(hl)
-    random.shuffle(al)
-    for i in xrange(l):
-        for j in xrange(l):
-            if i != j:
-                yield (allTeams[hl[i]], allTeams[al[j]])
-
-def Simulate(allTeams):
-    curStanding = allTeams.values()
-    curStanding.sort()
-    for home, away in get_Fixtures(allTeams):
-        home.homematch(away)
-    curStanding.sort()
-    return curStanding[::-1]
             
 def close(iterate = False):
     for team in allTeams:
