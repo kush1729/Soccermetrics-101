@@ -390,7 +390,7 @@ def Load_Screen(gameDisplay, display_width, display_height):
     iterator = teams.load()
     tot = iterator.next()
     p = 0
-    currentload = 'team'
+    currentload = 'teams'
     timer = -1
     
     count = 0
@@ -421,8 +421,8 @@ def Load_Screen(gameDisplay, display_width, display_height):
         try:
             iterator.next()
         except StopIteration:
-            if currentload == 'team':
-                currentload = 'player'
+            if currentload == 'teams':
+                currentload = 'players'
                 p = 0
                 iterator = players.load()
                 tot = iterator.next()
@@ -509,7 +509,7 @@ def Menu1(gameDisplay, display_width, display_height, listofteams, results):
     a = [gui.ClickListBox.RETURN_NAME for _ in xrange(len(listofteams))]    
     clickb = gui.ClickListBox(10, recty, rectwidth, rectheight, listofteams, a, rectheight/10,
                               bkgcolour = white, repeat_action = False)
-    res_list = gui.ListBox(display_width/2 + 10, recty, rectwidth + 100, rectheight, results, rectheight/10)
+    res_list = gui.ListBox(display_width/2 - 50, recty, rectwidth + 100, rectheight, results, rectheight/20)
     while True:
         checkquit(gameDisplay, display_width, display_height)
         c = clickb.get_click()

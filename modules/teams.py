@@ -3,6 +3,7 @@ import pickle as pk
 import random
 import back_up as bu
 
+
 """Class Definition is incomplete.
 Methods to calculate ELO, financial status etc are required."""
 class Club(object):
@@ -15,9 +16,11 @@ The Team Object will store all relevant data of a particular team."""
         if self.standing == 0:
             self.elo = 200
         else:
-            self.elo = 1100 - 50*self.standing
+            x = int(random.normalvariate(0, 25))
+            self.elo = 1100 - 60*self.standing + x
         self.points = 0
         self.goaldiff = 0
+        self.fixtures_results = []
     def __str__(self):
         """string representation of the team"""
         return self.name
@@ -74,7 +77,9 @@ The Team Object will store all relevant data of a particular team."""
         for player in self.player_list:
             player.send_info()
     def homematch(self, awayteam):
-        if awayteam.elo > self.elo + 100:
+        if awayteam.elo > 1.5 * self.elo:
+            awayelo = awayteam.elo - random.randint(0, 5)
+        elif awayteam.elo > self.elo + 100:
             awayelo = awayteam.elo - random.randint(5, 10)
         elif self.elo > awayteam.elo + 100:
             awayelo = awayteam.elo - random.randint(10, 17)
