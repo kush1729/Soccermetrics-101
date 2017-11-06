@@ -574,10 +574,10 @@ def Menu1(gameDisplay, display_width, display_height, listofteams, results):
             print details[0], '\t\t\t', details[1]
             for m in timeline:
                 if m[0] == details[0]:
-                    print m[1], str(m[2]) + '"'
+                    print m[1], str(m[2]), str(m[3]) +  '"'
                 else:
                     print '\t' * 6,
-                    print m[1], str(m[2]) + '"'
+                    print m[1], str(m[2]), str(m[3]) + '"'
 
             print "Full Time!"
             print
