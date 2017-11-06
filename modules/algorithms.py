@@ -2,6 +2,7 @@ import teams
 import players
 import random
 import itertools
+from operator import itemgetter
 
 def suggester():
 
@@ -43,21 +44,13 @@ def suggester():
                         for market_team in grouplist[market_group]: #team you wanna buy from
                             if team != market_team: #team not yours
                                 for market_person in market_team.pl_pos[n]: #player i wanna buy
-                                    ###print team,
                                     if market_person.new_rating > person.new_rating:
                                         s = str(market_person.name) + ' for ' + str(person.name)
-                                        ##print s
                                         team.sug_list[n].append(s)
-                                    #else:
-                                        ##print
-##            n = 6
-##            break  #REMOVE THIS FAST
+
         
         n += 1
-##    for tname in teams.allTeams:
-##        for i in xrange(4):
-##            #print "Length of sug_list[%d] for team %s is %d"%(i, tname, len(teams.allTeams[tname].sug_list[i]))
-##        #print
+
 
 
 def get_Fixtures(allTeams):
@@ -70,7 +63,7 @@ def get_Fixtures(allTeams):
     indprod = list(itertools.product(xrange(l), xrange(l))) #cartesian product of indices
     random.shuffle(indprod)
     for i, j in indprod:
-        if hl[i] != al[j]:
+        if hl[i] != al[j]:      # So you dont play against yourself
             yield (allTeams[hl[i]], allTeams[al[j]])
     del indprod
 
@@ -84,9 +77,75 @@ def Simulate(allTeams):
         s = "{:^s} %d - {:^s} %d".format(home.name, away.name)
         if gd < 0:
             results.append(s%(loss_score, loss_score + abs(gd)))
+            home.match_det[(home.name, away.name)] = match_details(home, away, loss_score, loss_score + abs(gd))
+            away.match_det[(home.name, away.name)] = match_details(home, away, loss_score, loss_score + abs(gd))
         else:
             results.append(s%(loss_score + gd, loss_score))
+            home.match_det[(home.name, away.name)] = match_details(home, away, loss_score + gd, loss_score)
+            away.match_det[(home.name, away.name)] = match_details(home, away, loss_score + gd, loss_score)
         home.fixtures_results.append(s)
         away.fixtures_results.append(s)
     curStanding.sort()
     return curStanding[::-1], results
+
+def match_details(home, away, h_score, a_score):
+    time = range(1, 91)
+    det = []
+    if h_score > 0:
+        hometeam = home.player_list
+        for goal in xrange(h_score):
+            chosen = False
+            while not chosen:
+                player = random.choice(hometeam)
+                if player.position.lower() == 'g':
+                    chosen = False
+                elif player.position.lower() == 'd':
+                    chosen = random.choice([False, False, False, True, True])
+                elif player.position.lower() == 'm':
+                    chosen = random.choice([False, True, True, True, True])
+                elif player.position.lower() == 'f':
+                    chosen = True
+
+            minute = random.choice(time)
+            for m in xrange(minute - 2, minute + 2):
+                try:
+                    time.remove(m)
+                except ValueError:
+                    pass
+
+            det.append([home.name, player, minute])
+            
+
+                
+            
+            
+                    
+                    
+                    
+    if a_score > 0:
+        awayteam = away.player_list
+        for goal in xrange(a_score):
+            chosen = False
+            while not chosen:
+                player = random.choice(awayteam)
+                if player.position.lower() == 'g':
+                    chosen = False
+                elif player.position.lower() == 'd':
+                    chosen = random.choice([False, False, False, True, True])
+                elif player.position.lower() == 'm':
+                    chosen = random.choice([False, True, True, True, True])
+                elif player.position.lower() == 'f':
+                    chosen = True
+
+            minute = random.choice(time)
+            for m in xrange(minute - 2, minute + 2):
+                try:
+                    time.remove(m)
+                except ValueError:
+                    pass
+            det.append([away.name, player, minute])
+
+    det.sort(key = itemgetter(2))   # Sorts the nested list by third item, i.e., time
+    return det
+                    
+    

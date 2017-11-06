@@ -509,11 +509,42 @@ def Menu1(gameDisplay, display_width, display_height, listofteams, results):
     a = [gui.ClickListBox.RETURN_NAME for _ in xrange(len(listofteams))]    
     clickb = gui.ClickListBox(10, recty, rectwidth, rectheight, listofteams, a, rectheight/10,
                               bkgcolour = white, repeat_action = False)
-    res_list = gui.ListBox(display_width/2 - 50, recty, rectwidth + 100, rectheight, results, rectheight/20)
+    act = []
+    for r in results:
+        res = r
+        home = ''
+        for let in res:
+            home += let
+            if home[-2:] == 'FC' or home == 'Bournemouth':
+                break
+        home = home.lstrip()
+        home = home.rstrip()
+        
+        res = res.lstrip(home)
+        awa = ''
+        for let in res:
+            if let.isalpha() or let.isspace():
+                awa += let
+                if awa[-2:] == 'FC' or awa == 'Bournemouth':
+                    break
+
+        awa = awa.lstrip()
+        awa = awa.rstrip()
+
+        act.append((home, awa))
+        
+    
+        
+            
+        
+        
+        
+    res_list = gui.ClickListBox(display_width/2 - 50, recty, rectwidth + 100, rectheight, results, act, rectheight/20)
     while True:
         checkquit(gameDisplay, display_width, display_height)
         c = clickb.get_click()
         res_list.shift()
+        details = res_list.get_click()
         background(gameDisplay, [centrecircle], [0], [0])
         gui.message_to_screen(gameDisplay, "SIMULATED LEAGUE STANDINGS", yellow, (display_width/2, 50), 40)
         clickb.blit(gameDisplay)
@@ -526,6 +557,35 @@ def Menu1(gameDisplay, display_width, display_height, listofteams, results):
             #MenuPlayerList(gameDisplay, display_width, display_height, plist, c)
             Menu2(gameDisplay, display_width, display_height, c)
             c = None
+        if details <> None:
+            for t in teams.allTeams:
+                if t.lower() == details[0].lower():
+##                    print teams.allTeams[t].match_det
+                    try:
+                        timeline = teams.allTeams[t].match_det[details]
+                    except KeyError:
+                        print details, "was not found in"
+                        print teams.allTeams[t].match_det
+                    finally:
+                        break
+                
+
+            print "Match Start"
+            print details[0], '\t\t\t', details[1]
+            for m in timeline:
+                if m[0] == details[0]:
+                    print m[1], str(m[2]) + '"'
+                else:
+                    print '\t' * 6,
+                    print m[1], str(m[2]) + '"'
+
+            print "Full Time!"
+            print
+        
+
+    
+                
+            
         
             
 def MenuPlayerList(gameDisplay, display_width, display_height, plist, teamname):

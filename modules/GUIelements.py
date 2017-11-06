@@ -362,7 +362,7 @@ class ClickListBox(ListBox, Clickable):
             if self.actions[i] == ClickListBox.RETURN_NAME:
                 return self.keys[i]
             else:
-                return self.actions[i]() 
+                return self.actions[i] 
             
             
     def blit(self, surface, update = False):
