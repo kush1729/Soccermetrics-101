@@ -21,6 +21,7 @@ The Team Object will store all relevant data of a particular team."""
         self.points = 0
         self.goaldiff = 0
         self.fixtures_results = []
+        self.match_det = {}
     def __str__(self):
         """string representation of the team"""
         return self.name
