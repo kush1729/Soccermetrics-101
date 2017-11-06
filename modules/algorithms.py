@@ -91,8 +91,9 @@ def Simulate(allTeams):
 def match_details(home, away, h_score, a_score):
     time = range(1, 91)
     det = []
+    hometeam = home.player_list
     if h_score > 0:
-        hometeam = home.player_list
+        
         for goal in xrange(h_score):
             chosen = False
             while not chosen:
@@ -113,17 +114,18 @@ def match_details(home, away, h_score, a_score):
                 except ValueError:
                     pass
 
-            det.append([home.name, player, minute])
+            det.append([home.name, "GOAL!!", player, minute])
             
 
                 
             
             
                     
-                    
+
+    awayteam = away.player_list               
                     
     if a_score > 0:
-        awayteam = away.player_list
+        
         for goal in xrange(a_score):
             chosen = False
             while not chosen:
@@ -143,9 +145,67 @@ def match_details(home, away, h_score, a_score):
                     time.remove(m)
                 except ValueError:
                     pass
-            det.append([away.name, player, minute])
+            det.append([away.name, "GOAL!", player, minute])
+            
+    y_list = []
+    r_list = []
+    redcount = 0
+    for y in xrange(random.randint(0, 7)):
+        yellowcard = False
+        team = random.choice([hometeam, awayteam])
+        if team == hometeam:
+            teamname = home.name
+        else:
+            teamname = away.name
+        count = 0
+        chosen = False
+        text = ''
+        while not yellowcard:
+            count += 1
+            while True:
+                player = random.choice(team)
+                if player not in r_list:
+                    break
+            if player.position.lower() == 'g':
+                yellowcard = False
+                
+            elif player.position.lower() == 'd':
+                yellowcard = True
+                
+            elif player.position.lower() == 'm':
+                yellowcard = random.choice([False, False, True, True, True])
+                
+            elif player.position.lower() == 'f':
+                yellowcard = ([False, False, False, False, True])
+            if yellowcard:
+                if player in y_list:
+                    if redcount < 3:
+                        text = "RED CARD!!!"
+                        redcount += 1
+                        r_list.append(player)
+                else:
+                    text = "YELLOW CARD!"
+                    y_list.append(player)
+                        
+                chosen = True
+            if count > 3:
+                yellowcard = True
+                chosen = False
 
-    det.sort(key = itemgetter(2))   # Sorts the nested list by third item, i.e., time
+        if chosen:
+##            if text == "RED CARD!!!":
+##                
+            minute = random.choice(time)
+            for m in xrange(minute - 2, minute + 2):
+                try:
+                    time.remove(m)
+                except ValueError:
+                    pass
+            
+            det.append([teamname, text, player, minute])
+                
+
+    det.sort(key = itemgetter(3))   # Sorts the nested list by fourth item, i.e., time
     return det
                     
     
