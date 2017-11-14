@@ -532,13 +532,7 @@ def Menu1(gameDisplay, display_width, display_height, listofteams, results):
         awa = awa.rstrip()
 
         act.append((home, awa))
-        
-    
-        
-            
-        
-        
-        
+ 
     res_list = gui.ClickListBox(display_width/2 - 50, recty, rectwidth + 100, rectheight, results, act, rectheight/20)
     while True:
         checkquit(gameDisplay, display_width, display_height)
@@ -558,34 +552,50 @@ def Menu1(gameDisplay, display_width, display_height, listofteams, results):
             Menu2(gameDisplay, display_width, display_height, c)
             c = None
         if details <> None:
-            for t in teams.allTeams:
-                if t.lower() == details[0].lower():
+            gameDetails(gameDisplay, display_width, display_height, details)
+
+
+def gameDetails(gameDisplay, display_width, display_height, details):
+    for t in teams.allTeams:
+        if t.lower() == details[0].lower():
 ##                    print teams.allTeams[t].match_det
-                    try:
-                        timeline = teams.allTeams[t].match_det[details]
-                    except KeyError:
-                        print details, "was not found in"
-                        print teams.allTeams[t].match_det
-                    finally:
-                        break
-                
-
-            print "Match Start"
-            print details[0], '\t\t\t', details[1]
-            for m in timeline:
-                if m[0] == details[0]:
-                    print m[1], str(m[2]), str(m[3]) +  '"'
-                else:
-                    print '\t' * 6,
-                    print m[1], str(m[2]), str(m[3]) + '"'
-
-            print "Full Time!"
-            print
+            try:
+                timeline = teams.allTeams[t].match_det[details]
+            except KeyError:
+                print details, "was not found in"
+                print teams.allTeams[t].match_det
+            finally:
+                break
+    clock = pygame.time.Clock()
+    backbtn = gui.Button(-1 + display_width//2, display_height - 100, 150, 80, text = 'BACK')
+    while True:
+        checkquit(gameDisplay, display_width, display_height)
+        c = backbtn.get_click()
+        if c != None:
+            time.sleep(0.25)
+            return
+        background(gameDisplay, [centrecircle], [0], [0])
+        gui.message_to_screen(gameDisplay, "MATCH START", yellow, (display_width//2, 20), 40)
+        gui.message_to_screen(gameDisplay, details[0].upper(), yellow, (display_width//4, 80), 30)
+        gui.message_to_screen(gameDisplay, details[1].upper(), yellow, (3*display_width//4, 80), 30)
+        h1 = 120
+        h2 = 120
+        textsize = 30
+        for m in timeline:
+            if m[0] == details[0]:
+                s = str(m[1]) + " " + str(m[2]) + '"'
+                h1 += textsize + 10
+                gui.message_to_screen(gameDisplay, s, yellow, (display_width//4, h1), textsize)
+            else:
+                s = str(m[1]) + " " + str(m[2]) + '"'
+                h2 += textsize + 10
+                gui.message_to_screen(gameDisplay, s, yellow, (3*display_width//4, h2), textsize)
+        h = max(h1, h2) + textsize + 30
+        gui.message_to_screen(gameDisplay, "FULL TIME!", yellow, (display_width//2, h), 40)
+        backbtn.blit(gameDisplay)
+        pygame.display.update()
+        clock.tick(20)
         
-
-    
-                
-            
         
             
 def MenuPlayerList(gameDisplay, display_width, display_height, plist, teamname):
