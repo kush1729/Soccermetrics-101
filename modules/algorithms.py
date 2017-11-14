@@ -100,13 +100,20 @@ def match_details(home, away, h_score, a_score):
                 player = random.choice(hometeam)
                 if player.position.lower() == 'g':
                     chosen = False
+                    player.season_impr += 0.01 * (2 - a_score)
                 elif player.position.lower() == 'd':
                     chosen = random.choice([False, False, False, True, True])
+                    if chosen:
+                        player.season_impr += 0.025
+                    player.season_impr += 0.01 * (2 - a_score)
                 elif player.position.lower() == 'm':
                     chosen = random.choice([False, True, True, True, True])
+                    if chosen:
+                        player.season_impr += 0.015
                 elif player.position.lower() == 'f':
                     chosen = True
-
+                    player.season_impr += 0.01
+            
             minute = random.choice(time)
             for m in xrange(minute - 2, minute + 2):
                 try:
@@ -114,7 +121,8 @@ def match_details(home, away, h_score, a_score):
                 except ValueError:
                     pass
 
-            det.append([home.name, "GOAL!!", player, minute])
+            det.append([home.name, player, minute])
+            #det.append([home.name, "GOAL!!", player, minute])
             
 
                 
@@ -123,7 +131,6 @@ def match_details(home, away, h_score, a_score):
                     
 
     awayteam = away.player_list               
-                    
     if a_score > 0:
         
         for goal in xrange(a_score):
@@ -132,12 +139,19 @@ def match_details(home, away, h_score, a_score):
                 player = random.choice(awayteam)
                 if player.position.lower() == 'g':
                     chosen = False
+                    player.season_impr += 0.01 * (2 - h_score)
                 elif player.position.lower() == 'd':
                     chosen = random.choice([False, False, False, True, True])
+                    if chosen:
+                        player.season_impr += 0.03
+                    player.season_impr += 0.01 * (2 - a_score)
                 elif player.position.lower() == 'm':
                     chosen = random.choice([False, True, True, True, True])
+                    if chosen:
+                        player.season_impr += 0.02
                 elif player.position.lower() == 'f':
                     chosen = True
+                    player.season_impr += 0.01
 
             minute = random.choice(time)
             for m in xrange(minute - 2, minute + 2):
