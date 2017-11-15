@@ -34,6 +34,7 @@ d [5, 6]
 """
 import pygame as pg
 from Colours import *
+import time
 
 #---------------------------------------------------------------------------------------
 
@@ -125,9 +126,11 @@ as defined by the name of the constant."""
         text_to_button(surface, self.text, self.textcolour, self.x, self.y, self.wd, self.ht, self.size)
         if update:
             pg.display.update()
-    def get_click(self):
+    def get_click(self, delay = True):
         flag = super(Button, self).get_click(True)
         if flag:
+            if delay:
+                time.sleep(0.5)
             if self.string:
                 return self.action
             return self.action()
@@ -302,12 +305,12 @@ class ListBox(object):
     
     def shift(self):
         self.__drag_scroller()
-        if self.downarrow.get_click():
+        if self.downarrow.get_click(delay = False):
             if self.pos < len(self.items) - self.numvisible:
                 self.pos += 1
                 if self.scroll != None:
                     self.scroll.y += self.scroll.steps
-        elif self.uparrow.get_click():
+        elif self.uparrow.get_click(delay = False):
             if self.pos > 0:
                 self.pos -= 1
                 if self.scroll != None:
@@ -384,37 +387,37 @@ class ClickListBox(ListBox, Clickable):
 #TESTING 
 
 
-if __name__ == '__main__':
-    def f1(): print 1
-    def f2(): print 2
-    def f3(): print 3
-    def f4(): print 4
-    def f5(): print 5
-    def f6(): print 6
-    def f7(): print 7
-    def f8(): print 8
-    def change(): obj.repeat = True
-    pg.init()
-    screen = pg.display.set_mode((500, 500))
-    screen.fill(white)
-    clock = pg.time.Clock()
-    dk = ["item %d"%k for k in xrange(1, 9)] + ["CHANGE"]
-    dv = [f1, f2, f3, f4, f5, f6, f7, f8, change]
-    obj = ClickListBox(10, 10, 200, 400, dk, dv, 100, green)
-    while True:
-        for e in pg.event.get():
-            if e.type == pg.QUIT or (e.type == pg.KEYDOWN and e.key == pg.K_ESCAPE):
-                pg.quit()
-                quit()
-        screen.fill(white)
-        obj.get_click()
-##        s.get_dragged()
-##        for i in xrange(20):
-##            y = 10+20*i
-##            pg.draw.line(screen, black, (0, y), (400, y))
-##            message_to_screen(screen, str(y), black, (450, y), 20)
-##        s.blit(screen)
-        obj.blit(screen)
-        clock.tick(20)
-        pg.display.update()
+##if __name__ == '__main__':
+##    def f1(): print 1
+##    def f2(): print 2
+##    def f3(): print 3
+##    def f4(): print 4
+##    def f5(): print 5
+##    def f6(): print 6
+##    def f7(): print 7
+##    def f8(): print 8
+##    def change(): obj.repeat = True
+##    pg.init()
+##    screen = pg.display.set_mode((500, 500))
+##    screen.fill(white)
+##    clock = pg.time.Clock()
+##    dk = ["item %d"%k for k in xrange(1, 9)] + ["CHANGE"]
+##    dv = [f1, f2, f3, f4, f5, f6, f7, f8, change]
+##    obj = ClickListBox(10, 10, 200, 400, dk, dv, 100, green)
+##    while True:
+##        for e in pg.event.get():
+##            if e.type == pg.QUIT or (e.type == pg.KEYDOWN and e.key == pg.K_ESCAPE):
+##                pg.quit()
+##                quit()
+##        screen.fill(white)
+##        obj.get_click()
+####        s.get_dragged()
+####        for i in xrange(20):
+####            y = 10+20*i
+####            pg.draw.line(screen, black, (0, y), (400, y))
+####            message_to_screen(screen, str(y), black, (450, y), 20)
+####        s.blit(screen)
+##        obj.blit(screen)
+##        clock.tick(20)
+##        pg.display.update()
         
