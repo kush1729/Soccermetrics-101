@@ -5,6 +5,7 @@ import teams
 class Player(object):
     def __init__(self, name):
         self.name = name
+        self.season_impr = 0
         self.get_info()
     def __del__(self):
         pass
@@ -71,7 +72,7 @@ class Player(object):
         else:
             self.new_rating = self.year_2_rating - 0.15
 
-        self.impr = self.year_2_rating - self.year_1_rating
+        self.impr = self.year_2_rating - self.year_1_rating + self.season_impr
 
         impr_dict = {'Chelsea FC': 7, 'Tottenham Hotspur FC' : 4, 'Manchester City FC' : 9, 'Liverpool FC' : 6,
                      'Arsenal FC' : 5, 'Manchester United FC' : 8, 'Everton FC' : 7, 'Southampton FC' : 4 ,

@@ -86,6 +86,18 @@ The Team Object will store all relevant data of a particular team."""
             awayelo = awayteam.elo - random.randint(10, 17)
         else:
             awayelo = awayteam.elo - random.randint(17, 24)
+        d = {"CHELSEA FC":50,
+             "MANCHESTER CITY FC":70,
+             "MANCHESTER UNITED FC":90,
+             "ARSENAL FC":70,
+             "LIVERPOOL FC":70,
+             "LEICESTER CITY FC":200,
+             "WEST BROMWICH ALBION FC":100,
+             "SOUTHAMPTON FC":100,
+             "BOURNEMOUTH":130,
+             "EVERTON FC":80,
+             "TOTTENHAM HOTSPUR FC":50}
+        awayelo += random.normalvariate(0, d[awayteam.name.upper()])
         if 150 >= abs(awayelo - self.elo)>= 0:
             self.points += 1
             awayteam.points += 1
