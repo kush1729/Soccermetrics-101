@@ -76,15 +76,17 @@ def Simulate(allTeams):
         loss_score = int(random.normalvariate(1.5, 0.75))
         s = "{:^s} %d - {:^s} %d".format(home.name, away.name)
         if gd < 0:
-            results.append(s%(loss_score, loss_score + abs(gd)))
-            home.match_det[(home.name, away.name)] = match_details(home, away, loss_score, loss_score + abs(gd))
-            away.match_det[(home.name, away.name)] = match_details(home, away, loss_score, loss_score + abs(gd))
+            matchresultstr = s%(loss_score, loss_score + abs(gd))
+            results.append(matchresultstr)
+            home.match_det[matchresultstr] = match_details(home, away, loss_score, loss_score + abs(gd))
+            away.match_det[matchresultstr] = match_details(home, away, loss_score, loss_score + abs(gd))
         else:
-            results.append(s%(loss_score + gd, loss_score))
-            home.match_det[(home.name, away.name)] = match_details(home, away, loss_score + gd, loss_score)
-            away.match_det[(home.name, away.name)] = match_details(home, away, loss_score + gd, loss_score)
-        home.fixtures_results.append(s)
-        away.fixtures_results.append(s)
+            matchresultstr = s%(loss_score + gd, loss_score)
+            results.append(matchresultstr)
+            home.match_det[matchresultstr] = match_details(home, away, loss_score + gd, loss_score)
+            away.match_det[matchresultstr] = match_details(home, away, loss_score + gd, loss_score)
+        home.fixtures_results.append(matchresultstr)
+        away.fixtures_results.append(matchresultstr)
     curStanding.sort()
     return curStanding[::-1], results
 
@@ -125,11 +127,6 @@ def match_details(home, away, h_score, a_score):
             #det.append([home.name, "GOAL!!", player, minute])
             
 
-                
-            
-            
-                    
-
     awayteam = away.player_list               
     if a_score > 0:
         
@@ -160,66 +157,33 @@ def match_details(home, away, h_score, a_score):
                 except ValueError:
                     pass
             det.append([away.name, player, minute])
-            
-##    y_list = []
-##    r_list = []
-##    redcount = 0
-##    for y in xrange(random.randint(0, 7)):
-##        yellowcard = False
-##        team = random.choice([hometeam, awayteam])
-##        if team == hometeam:
-##            teamname = home.name
-##        else:
-##            teamname = away.name
-##        count = 0
-##        chosen = False
-##        text = ''
-##        while not yellowcard:
-##            count += 1
-##            while True:
-##                player = random.choice(team)
-##                if player not in r_list:
-##                    break
-##            if player.position.lower() == 'g':
-##                yellowcard = False
-##                
-##            elif player.position.lower() == 'd':
-##                yellowcard = True
-##                
-##            elif player.position.lower() == 'm':
-##                yellowcard = random.choice([False, False, True, True, True])
-##                
-##            elif player.position.lower() == 'f':
-##                yellowcard = ([False, False, False, False, True])
-##            if yellowcard:
-##                if player in y_list:
-##                    if redcount < 3:
-##                        text = "RED CARD!!!"
-##                        redcount += 1
-##                        r_list.append(player)
-##                else:
-##                    text = "YELLOW CARD!"
-##                    y_list.append(player)
-##                        
-##                chosen = True
-##            if count > 3:
-##                yellowcard = True
-##                chosen = False
-##
-##        if chosen:
-####            if text == "RED CARD!!!":
-####                
-##            minute = random.choice(time)
-##            for m in xrange(minute - 2, minute + 2):
-##                try:
-##                    time.remove(m)
-##                except ValueError:
-##                    pass
-##            
-##            det.append([teamname, text, player, minute])
-##                
+
 
     det.sort(key = itemgetter(2))   # Sorts the nested list by fourth item, i.e., time
     return det
                     
-    
+def get_results(results):
+    act = []
+    for r in results:
+        res = r
+        home = ''
+        for let in res:
+            home += let
+            if home[-2:] == 'FC' or home == 'Bournemouth':
+                break
+        home = home.lstrip()
+        home = home.rstrip()
+        
+        res = res.lstrip(home)
+        awa = ''
+        for let in res:
+            if let.isalpha() or let.isspace():
+                awa += let
+                if awa[-2:] == 'FC' or awa == 'Bournemouth':
+                    break
+
+        awa = awa.lstrip()
+        awa = awa.rstrip()
+
+        act.append((home, awa))
+    return act

@@ -17,6 +17,7 @@ from os import getcwd
 import GUIelements as gui
 import teams
 import players
+import algorithms
 
 # ------------------------------------------
 # Control frames per second:----------------
@@ -512,30 +513,7 @@ def Menu1(gameDisplay, display_width, display_height, listofteams, results):
     a = [gui.ClickListBox.RETURN_NAME for _ in xrange(len(listofteams))]    
     clickb = gui.ClickListBox(10, recty, rectwidth, rectheight, listofteams, a, rectheight/10,
                               bkgcolour = white, repeat_action = False)
-    act = []
-    for r in results:
-        res = r
-        home = ''
-        for let in res:
-            home += let
-            if home[-2:] == 'FC' or home == 'Bournemouth':
-                break
-        home = home.lstrip()
-        home = home.rstrip()
-        
-        res = res.lstrip(home)
-        awa = ''
-        for let in res:
-            if let.isalpha() or let.isspace():
-                awa += let
-                if awa[-2:] == 'FC' or awa == 'Bournemouth':
-                    break
-
-        awa = awa.lstrip()
-        awa = awa.rstrip()
-
-        act.append((home, awa))
- 
+    act = algorithms.get_results(results)
     res_list = gui.ClickListBox(display_width/2 - 50, recty, rectwidth + 100, rectheight, results, act, rectheight/20)
     while True:
         checkquit(gameDisplay, display_width, display_height)
@@ -551,7 +529,6 @@ def Menu1(gameDisplay, display_width, display_height, listofteams, results):
         if c != None:
             #print 'nothing till now'
             plist = [p.name for p in teams.allTeams[c]]
-            #MenuPlayerList(gameDisplay, display_width, display_height, plist, c)
             Menu2(gameDisplay, display_width, display_height, c)
             c = None
         if details <> None:
@@ -600,38 +577,7 @@ def gameDetails(gameDisplay, display_width, display_height, details):
         pygame.display.update()
         clock.tick(20)
         
-        
-            
-def MenuPlayerList(gameDisplay, display_width, display_height, plist, teamname):
-    background(gameDisplay, [centrecircle], [0], [0])
-    recty =  100
-    rectwidth = display_width/2 - 100
-    rectheight = display_height - recty - 50
-    rectx = (display_width - rectwidth)/2 
-
-    ry = recty - 50
-    while ry < rectheight + 50:
-        pygame.draw.rect(gameDisplay, black, [rectx, recty, rectwidth, ry])
-        pygame.display.flip()
-        time.sleep(0.01)
-        ry += 25
-
-    backbtn = gui.Button(display_width - 175, display_height/2, 150, 100, text = 'BACK')
-    listb = gui.ListBox(rectx, recty, rectwidth, rectheight, plist, rectheight/10)
-
-    while True:
-        checkquit(gameDisplay, display_width, display_height)
-        c = backbtn.get_click()
-        listb.shift()
-        background(gameDisplay, [centrecircle], [0], [0])
-        gui.message_to_screen(gameDisplay, str(teamname).upper(), yellow, (display_width/2, recty - 50), 40)
-        listb.blit(gameDisplay)
-        backbtn.blit(gameDisplay)
-        pygame.display.update()
-        time.sleep(0.01)
-        if c != None:
-            return
-    
+ 
 def Menu2(gameDisplay, display_width, display_height, teamname):
     background(gameDisplay, [centrecircle], [0], [0])
     #teamname = teamname.replace(" ", "_")
@@ -647,9 +593,12 @@ def Menu2(gameDisplay, display_width, display_height, teamname):
         time.sleep(0.01)
         ry += 25
 
-    backbtn = gui.Button(display_width - 175, display_height/2, 150, 100, text = 'BACK')
-    listb = gui.ClickListBox(rectx, recty, rectwidth, rectheight, ["KEEPERS", "DEFENDERS", "MIDFIELDERS", "FORWARDS"],
+    backbtn = gui.Button(display_width//2 - 75, display_height - 100, 150, 80, text = 'BACK')
+    listb = gui.ClickListBox((display_width//4 - rectwidth//2), recty, rectwidth, rectheight,
+                             ["KEEPERS", "DEFENDERS", "MIDFIELDERS", "FORWARDS"],
                              [1, 1, 1, 1], ind_ht)
+    indfixt = gui.ClickListBox((3*display_width//4 - rectwidth//2), recty, rectwidth, rectheight,
+                               teams.allTeams[teamname].
     while True:
         checkquit(gameDisplay, display_width, display_height)
         e = backbtn.get_click()
@@ -683,7 +632,7 @@ def MenuSuggestions(gameDisplay, display_width, display_height, position, teamna
         e = backbtn.get_click()
         if e != None:
             return
-        gameDisplay.fill(white)
+        background(gameDisplay, [centrecircle], [0], [0])
         backbtn.blit(gameDisplay)
         gui.message_to_screen(gameDisplay, heading, black, (display_width/2, 50), 30)
         if flag:
