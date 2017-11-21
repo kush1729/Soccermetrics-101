@@ -18,6 +18,7 @@ import GUIelements as gui
 import teams
 import players
 import algorithms
+import traceback
 
 # ------------------------------------------
 # Control frames per second:----------------
@@ -180,21 +181,6 @@ def checkquit(gameDisplay, display_width, display_height, quitter = quit_functio
 # Main INTRO Function! 
 def intro(gameDisplay, display_width, display_height):
     time.sleep(0.5)
-##    start = False
-##    gameDisplay.fill(white)
-##    gui.message_to_screen(gameDisplay, "Press Any Key Other Than Escape To Start", black, (display_width/2, display_height/2), 40)
-##    gui.message_to_screen(gameDisplay, "Press Escape to Quit", black, (display_width/2, display_height/2 + 50), 30)
-##    pygame.display.update()
-##    while not start:
-##        
-##        for event in pygame.event.get():
-##            if event.type == pygame.KEYDOWN:
-##                if event.key == pygame.K_ESCAPE:
-##                    pygame.quit()
-##                    quit()
-##                else:
-##                    start = True
-##                    break
     gameDisplay.fill(white)
     pygame.display.update()
     gameon = True
@@ -218,10 +204,6 @@ def intro(gameDisplay, display_width, display_height):
         count = 0
         Medium = False
         Big = False
-
-##        pygame.mixer.init()
-##        pygame.mixer.music.load("Cheer.mp3")
-##        pygame.mixer.music.play(-1)
 
         while ballx < display_width/2 - 140:    # Taking into account the size of the ball at the time
 
@@ -537,13 +519,16 @@ def Menu1(gameDisplay, display_width, display_height, listofteams, results):
 
 def gameDetails(gameDisplay, display_width, display_height, details):
     for t in teams.allTeams:
-        if t.lower() == details[0].lower():
+        d = algorithms.get_names(details)
+        if t.lower() == d[0].lower():
 ##                    print teams.allTeams[t].match_det
             try:
                 timeline = teams.allTeams[t].match_det[details]
             except KeyError:
                 print details, "was not found in"
                 print teams.allTeams[t].match_det
+            except:
+                traceback.print_exc()
             finally:
                 break
     clock = pygame.time.Clock()
@@ -598,7 +583,8 @@ def Menu2(gameDisplay, display_width, display_height, teamname):
                              ["KEEPERS", "DEFENDERS", "MIDFIELDERS", "FORWARDS"],
                              [1, 1, 1, 1], ind_ht)
     indfixt = gui.ClickListBox((3*display_width//4 - rectwidth//2), recty, rectwidth, rectheight,
-                               teams.allTeams[teamname].
+                               teams.allTeams[teamname].fixtures_results, [1]*len(teams.allTeams[teamname].fixtures_results),
+                               ind_ht)
     while True:
         checkquit(gameDisplay, display_width, display_height)
         e = backbtn.get_click()
