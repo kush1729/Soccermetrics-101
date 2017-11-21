@@ -13,7 +13,7 @@ the namespace is __main__"""
 import pygame
 import time
 from math import sqrt
-from os import getcwd
+from os import getcwd 
 import GUIelements as gui
 import teams
 import players
@@ -518,19 +518,35 @@ def Menu1(gameDisplay, display_width, display_height, listofteams, results):
 
 
 def gameDetails(gameDisplay, display_width, display_height, details):
-    for t in teams.allTeams:
-        d = algorithms.get_names(details)
-        if t.lower() == d[0].lower():
-##                    print teams.allTeams[t].match_det
-            try:
-                timeline = teams.allTeams[t].match_det[details]
-            except KeyError:
-                print details, "was not found in"
-                print teams.allTeams[t].match_det
-            except:
-                traceback.print_exc()
-            finally:
-                break
+    d = algorithms.get_names(details)
+    timeline = teams.allTeams[d[0]].match_det[details]
+    
+    home_list = []
+    away_list = []
+    home_dict = {}
+    away_dict = {}
+    hi = 0 #home index
+    ai = 0 #away index
+    for teamname, player, minute in timeline:
+        # so that a player with multiple goals only gets mentioned once.
+        if teamname == d[0]:
+            if player in home_dict.keys():
+                k = home_dict[player]
+                home_list[k] += ", %d'"%minute
+            else:
+                home_dict[player] = hi
+                hi += 1
+                home_list.append("%s %d'"%(str(player), minute))
+        elif teamname == d[1]:
+            if player in away_dict.keys():
+                k = away_dict[player]
+                away_list[k] += ", %d'"%minute
+            else:
+                away_dict[player] = hi
+                ai += 1
+                away_list.append("%s %d'"%(str(player), minute))
+    del home_dict
+    del away_dict
     clock = pygame.time.Clock()
     backbtn = gui.Button(-75 + display_width//2, display_height - 100, 150, 80, text = 'BACK')
     while True:
@@ -540,22 +556,20 @@ def gameDetails(gameDisplay, display_width, display_height, details):
             time.sleep(0.25)
             return
         background(gameDisplay, [centrecircle], [0], [0])
-        col = orange
+        col = darkorange
         gui.message_to_screen(gameDisplay, "MATCH START", col, (display_width//2, 20), 40)
-        gui.message_to_screen(gameDisplay, details[0].upper(), col, (display_width//4, 80), 30)
-        gui.message_to_screen(gameDisplay, details[1].upper(), col, (3*display_width//4, 80), 30)
+        gui.message_to_screen(gameDisplay, d[0].upper(), col, (display_width//4, 80), 30)
+        gui.message_to_screen(gameDisplay, d[1].upper(), col, (3*display_width//4, 80), 30)
         h1 = 120
         h2 = 120
         textsize = 30
-        for m in timeline:
-            if m[0] == details[0]:
-                s = str(m[1]) + " " + str(m[2]) + '"'
-                h1 += textsize + 10
-                gui.message_to_screen(gameDisplay, s, col, (display_width//4, h1), textsize)
-            else:
-                s = str(m[1]) + " " + str(m[2]) + '"'
-                h2 += textsize + 10
-                gui.message_to_screen(gameDisplay, s, col, (3*display_width//4, h2), textsize)
+        for s in home_list:
+            h1 += textsize + 10
+            gui.message_to_screen(gameDisplay, s, col, (display_width//4, h1), textsize)
+        for s in away_list:
+            h2 += textsize + 10
+            gui.message_to_screen(gameDisplay, s, col, (3*display_width//4, h2), textsize)
+        
         h = max(h1, h2) + textsize + 30
         gui.message_to_screen(gameDisplay, "FULL TIME!", col, (display_width//2, h), 40)
         backbtn.blit(gameDisplay)
@@ -584,22 +598,28 @@ def Menu2(gameDisplay, display_width, display_height, teamname):
                              [1, 1, 1, 1], ind_ht)
     indfixt = gui.ClickListBox((3*display_width//4 - rectwidth//2), recty, rectwidth, rectheight,
                                teams.allTeams[teamname].fixtures_results, [1]*len(teams.allTeams[teamname].fixtures_results),
-                               ind_ht)
+                               rectheight//10)
+    clock = pygame.time.Clock()
     while True:
         checkquit(gameDisplay, display_width, display_height)
         e = backbtn.get_click()
         c = listb.get_click()
+        fdet = indfixt.get_click()
         background(gameDisplay, [centrecircle], [0], [0])
         gui.message_to_screen(gameDisplay, teamname.upper().replace("_", " "), yellow, (display_width/2, recty - 100), 40)
         listb.blit(gameDisplay)
         backbtn.blit(gameDisplay)
+        indfixt.blit(gameDisplay)
         pygame.display.update()
-        time.sleep(0.01)
+        clock.tick(20)
         if e != None:
             return
         if c != None:
             MenuSuggestions(gameDisplay, display_width, display_height, c, teamname)
             c = None
+        if fdet != None:
+            gameDetails(gameDisplay, display_width, display_height, fdet)
+            fdet = None
 
 def MenuSuggestions(gameDisplay, display_width, display_height, position, teamname): #i = 0, keeper; i = 1, defender etc.
     d = {"KEEPERS":0, "DEFENDERS":1, "MIDFIELDERS":2, "FORWARDS":3}
