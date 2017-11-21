@@ -165,25 +165,46 @@ def match_details(home, away, h_score, a_score):
 def get_results(results):
     act = []
     for r in results:
-        res = r
-        home = ''
-        for let in res:
-            home += let
-            if home[-2:] == 'FC' or home == 'Bournemouth':
-                break
-        home = home.lstrip()
-        home = home.rstrip()
-        
-        res = res.lstrip(home)
-        awa = ''
-        for let in res:
-            if let.isalpha() or let.isspace():
-                awa += let
-                if awa[-2:] == 'FC' or awa == 'Bournemouth':
-                    break
+##        res = r
+##        home = ''
+##        for let in res:
+##            home += let
+##            if home[-2:] == 'FC' or home == 'Bournemouth':
+##                break
+##        home = home.lstrip()
+##        home = home.rstrip()
+##        
+##        res = res.lstrip(home)
+##        awa = ''
+##        for let in res:
+##            if let.isalpha() or let.isspace():
+##                awa += let
+##                if awa[-2:] == 'FC' or awa == 'Bournemouth':
+##                    break
+##
+##        awa = awa.lstrip()
+##        awa = awa.rstrip()
 
-        awa = awa.lstrip()
-        awa = awa.rstrip()
-
-        act.append((home, awa))
+        act.append(r)
     return act
+
+def get_names(res):
+    home = ''
+    for let in res:
+        home += let
+        if home[-2:] == 'FC' or home == 'Bournemouth':
+            break
+    home = home.lstrip()
+    home = home.rstrip()
+    
+    res = res.lstrip(home)
+    awa = ''
+    for let in res:
+        if let.isalpha() or let.isspace():
+            awa += let
+            if awa[-2:] == 'FC' or awa == 'Bournemouth':
+                break
+
+    awa = awa.lstrip()
+    awa = awa.rstrip()
+    return (home, awa)

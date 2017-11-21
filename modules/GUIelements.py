@@ -130,7 +130,7 @@ as defined by the name of the constant."""
         flag = super(Button, self).get_click(True)
         if flag:
             if delay:
-                time.sleep(0.5)
+                time.sleep(0.2)
             if self.string:
                 return self.action
             return self.action()
