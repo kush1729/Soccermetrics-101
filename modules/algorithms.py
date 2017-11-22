@@ -104,12 +104,12 @@ def match_details(home, away, h_score, a_score):
                     chosen = False
                     player.season_impr += 0.01 * (2 - a_score)
                 elif player.position.lower() == 'd':
-                    chosen = random.choice([False, False, False, True, True])
+                    chosen = random.choice([False, False, False, False, True])
                     if chosen:
                         player.season_impr += 0.025
                     player.season_impr += 0.01 * (2 - a_score)
                 elif player.position.lower() == 'm':
-                    chosen = random.choice([False, True, True, True, True])
+                    chosen = random.choice([False, False, True, True, True])
                     if chosen:
                         player.season_impr += 0.015
                 elif player.position.lower() == 'f':
@@ -124,7 +124,6 @@ def match_details(home, away, h_score, a_score):
                     pass
 
             det.append([home.name, player, minute])
-            #det.append([home.name, "GOAL!!", player, minute])
             
 
     awayteam = away.player_list               
@@ -165,26 +164,6 @@ def match_details(home, away, h_score, a_score):
 def get_results(results):
     act = []
     for r in results:
-##        res = r
-##        home = ''
-##        for let in res:
-##            home += let
-##            if home[-2:] == 'FC' or home == 'Bournemouth':
-##                break
-##        home = home.lstrip()
-##        home = home.rstrip()
-##        
-##        res = res.lstrip(home)
-##        awa = ''
-##        for let in res:
-##            if let.isalpha() or let.isspace():
-##                awa += let
-##                if awa[-2:] == 'FC' or awa == 'Bournemouth':
-##                    break
-##
-##        awa = awa.lstrip()
-##        awa = awa.rstrip()
-
         act.append(r)
     return act
 

@@ -106,9 +106,5 @@ def load(iterate = False):
             pass
         yield 0
 
-if __name__ == '__main__':
-    pass
-elif __name__ != "__main__":
-    pass
 
             

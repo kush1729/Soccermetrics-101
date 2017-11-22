@@ -88,7 +88,7 @@ The Team Object will store all relevant data of a particular team."""
             awayelo = awayteam.elo - random.randint(17, 24)
         d = {"CHELSEA FC":50,
              "MANCHESTER CITY FC":70,
-             "MANCHESTER UNITED FC":90,
+             "MANCHESTER UNITED FC":130,
              "ARSENAL FC":70,
              "LIVERPOOL FC":70,
              "LEICESTER CITY FC":200,
