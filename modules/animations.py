@@ -19,6 +19,7 @@ import teams
 import players
 import algorithms
 import traceback
+import random
 
 # ------------------------------------------
 # Control frames per second:----------------
@@ -56,7 +57,7 @@ bigball1 = pygame.image.load(folder+"bigball1.png")
 bigball2 = pygame.image.load(folder+"bigball2.png")
 mediumball1 = pygame.image.load(folder+"mediumball1.png")
 mediumball2 = pygame.image.load(folder+"mediumball2.png")
-num_facts = 6
+num_facts = 7
 ##fact1 = pygame.image.load(folder+"Fact1.png")
 ##fact2 = pygame.image.load(folder+"Fact2.png")
 ##fact3 = pygame.image.load(folder+"Fact3.png")
@@ -66,6 +67,7 @@ num_facts = 6
 # ---------------------------------------------------------------------------
 try:
     factlist = [pygame.image.load(folder+"Fact%d.png"%i) for i in xrange(1, 1+num_facts)]
+    random.shuffle(factlist)
 except IOError:
     factlist = [pygame.image.load(folder+"Fact3.png")]
 # ----------------------------------------------------------------------------------------
@@ -542,11 +544,13 @@ def gameDetails(gameDisplay, display_width, display_height, details):
                 k = away_dict[player]
                 away_list[k] += ", %d'"%minute
             else:
-                away_dict[player] = hi
+                away_dict[player] = ai
                 ai += 1
                 away_list.append("%s %d'"%(str(player), minute))
     del home_dict
     del away_dict
+    colh = yellow
+    colp = cyan
     clock = pygame.time.Clock()
     backbtn = gui.Button(-75 + display_width//2, display_height - 100, 150, 80, text = 'BACK')
     while True:
@@ -556,22 +560,21 @@ def gameDetails(gameDisplay, display_width, display_height, details):
             time.sleep(0.25)
             return
         background(gameDisplay, [centrecircle], [0], [0])
-        col = darkorange
-        gui.message_to_screen(gameDisplay, "MATCH START", col, (display_width//2, 20), 40)
-        gui.message_to_screen(gameDisplay, d[0].upper(), col, (display_width//4, 80), 30)
-        gui.message_to_screen(gameDisplay, d[1].upper(), col, (3*display_width//4, 80), 30)
+        gui.message_to_screen(gameDisplay, "MATCH START", colh, (display_width//2, 20), 40)
+        gui.message_to_screen(gameDisplay, d[0].upper(), colh, (display_width//4, 80), 30)
+        gui.message_to_screen(gameDisplay, d[1].upper(), colh, (3*display_width//4, 80), 30)
         h1 = 120
         h2 = 120
         textsize = 30
         for s in home_list:
             h1 += textsize + 10
-            gui.message_to_screen(gameDisplay, s, col, (display_width//4, h1), textsize)
+            gui.message_to_screen(gameDisplay, s, colp, (display_width//4, h1), textsize)
         for s in away_list:
             h2 += textsize + 10
-            gui.message_to_screen(gameDisplay, s, col, (3*display_width//4, h2), textsize)
+            gui.message_to_screen(gameDisplay, s, colp, (3*display_width//4, h2), textsize)
         
         h = max(h1, h2) + textsize + 30
-        gui.message_to_screen(gameDisplay, "FULL TIME!", col, (display_width//2, h), 40)
+        gui.message_to_screen(gameDisplay, "FULL TIME!", colp, (display_width//2, h), 40)
         backbtn.blit(gameDisplay)
         pygame.display.update()
         clock.tick(20)
@@ -640,9 +643,9 @@ def MenuSuggestions(gameDisplay, display_width, display_height, position, teamna
             return
         background(gameDisplay, [centrecircle], [0], [0])
         backbtn.blit(gameDisplay)
-        gui.message_to_screen(gameDisplay, heading, black, (display_width/2, 50), 30)
+        gui.message_to_screen(gameDisplay, heading, yellow, (display_width/2, 50), 30)
         if flag:
-            gui.message_to_screen(gameDisplay, "NO SUGGESTIONS", black, (display_width/2, 120), 25)
+            gui.message_to_screen(gameDisplay, "NO SUGGESTIONS", yellow, (display_width/2, 120), 50)
         else:
             listb.shift()
             listb.blit(gameDisplay)
