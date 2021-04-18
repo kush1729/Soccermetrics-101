@@ -34,7 +34,7 @@ display_height = 750
 gameDisplay = pygame.display.set_mode((display_width, display_height),pygame.FULLSCREEN)
 
 try:
-    #animations.intro(gameDisplay, display_width, display_height)
+    animations.intro(gameDisplay, display_width, display_height)
     animations.Load_Screen(gameDisplay, display_width, display_height)
     table, results = algorithms.Simulate(teams.allTeams)
     teams.table = table
