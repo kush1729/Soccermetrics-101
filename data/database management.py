@@ -1,7 +1,9 @@
 #comment
 import os
 import pickle as pk
-
+import sys
+sys.path.append(os.getcwd().rstrip("data")+"modules")
+import back_up as bu
 if __name__ != "__main__":
     raise ImportError("This file is unimportable.")
 
@@ -136,6 +138,10 @@ while True:
         EditFile(name, "p")
     else:
         print "Exiting..."
+        print "Creating back up for each player..."
+        bu.backupplayers()
+        print "Creating back up for each team..."
+        bu.backupteams()
         break
     print
 
